@@ -1,0 +1,17 @@
+{
+  "name": "dsh-camoufox-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "camoufox": "0.5.9-beta.6",
+    "playwright": "1.62.0",
+    "playwright-core": "1.62.0",
+    "@playwright/mcp": "0.0.78",
+    "@modelcontextprotocol/sdk": "1.25.2"
+  },
+  "overrides": {
+    "playwright": "$playwright",
+    "playwright-core": "$playwright-core"
+  }
+}

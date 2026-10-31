@@ -1,0 +1,33 @@
+name: dsh-toolkit-demo
+services:
+  dsh:
+    image: local/dsh-toolkit-camoufox:0.1.0
+    build: .
+    ports:
+      - '127.0.0.1:${DSH_WEB_PORT:-3080}:3080'
+      - '127.0.0.1:${DSH_DESKTOP_PORT:-6080}:6080'
+    volumes:
+      - dsh-home:/home/node/.dsh
+      - ../../workspace:/workspace
+      - ../../dist:/opt/dsh-toolkit-dist:ro
+    environment:
+      HOME: /workspace
+      DSH_TELEMETRY_DISABLED: '1'
+      DSH_PUBLIC_HOST: '${DSH_PUBLIC_HOST:?请设置访问域名}'
+      OPENCODE_GO_API_KEY: '${OPENCODE_GO_API_KEY:-}'
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=1g
+    shm_size: 1gb
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 512
+    mem_limit: 4g
+    memswap_limit: 5g
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+volumes:
+  dsh-home:

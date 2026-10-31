@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tgz
+*.zip
+*.tar.gz
+__pycache__/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.log
+.DS_Store
+._*
+.dsh/
+workspace/

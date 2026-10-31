@@ -1,0 +1,30 @@
+# 合并到现有 profile，密钥由 DSH 启动环境提供。
+- id: llm-pi-ai
+  config:
+    providers:
+      opencode-go:
+        displayName: OpenCode Go
+        apiKeyEnv: OPENCODE_GO_API_KEY
+        api: openai-completions
+        baseURL: https://opencode.ai/inference/go/openai/v1
+        reasoning: high
+        compat:
+          supportsStore: false
+          supportsDeveloperRole: false
+          supportsUsageInStreaming: true
+          supportsReasoningEffort: true
+          maxTokensField: max_tokens
+          thinkingFormat: deepseek
+          requiresReasoningContentOnAssistantMessages: true
+        models:
+          - id: deepseek-v4.1-flash
+            name: DeepSeek V4.1 Flash
+            input: [text, image]
+            contextWindow: 1000000
+            maxTokens: 384000
+            reasoningEfforts: {low: low, high: high, max: max}
+- id: agent-default-model
+  config:
+    provider: opencode-go
+    model: deepseek-v4.1-flash
+    reasoningEffort: max

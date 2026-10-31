@@ -1,0 +1,20 @@
+- insert:
+    - id: browser-use
+      name: '@deepseek-ai/dsh-browser-use'
+    - id: camoufox-browser-use
+      name: '/opt/dsh-camoufox/provider.mjs'
+    - id: browser-desktop
+      name: '@runzhliu/dsh-browser-desktop'
+      config:
+        cdpBaseUrl: 'http://127.0.0.1:9222'
+        desktopPort: 443
+        desktopPath: '/novnc-debian-1.6.0-2/vnc.html?autoconnect=1&resize=scale&view_only=0&reconnect=1'
+- id: webserver
+  name: '@deepseek-ai/dsh-host-webserver'
+  config:
+    host: '127.0.0.1'
+    port: 3080
+- id: workspace-controller
+  name: '@deepseek-ai/dsh-api-workspace-controller'
+  config:
+    documentsDirectory: '/workspace'

@@ -1,0 +1,21 @@
+name: 插件检查
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: 安装已验证版本的 DSH 测试运行时
+        run: npm install --global @deepseek-ai/dsh@0.2.2-alpha.2 --ignore-scripts --no-audit --no-fund
+      - name: 构建、检查和测试
+        run: |
+          npm run build
+          npm run check
+          DSH_ENTRYPOINT="$(npm root -g)/@deepseek-ai/dsh/lib/bin.js" npm test
+          python3 scripts/audit-release.py
+          npm pack --pack-destination /tmp
