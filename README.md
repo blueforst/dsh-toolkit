@@ -4,7 +4,7 @@
 
 源码与版本包：[blueforst/dsh-toolkit](https://github.com/blueforst/dsh-toolkit) · [下载发布包](https://github.com/blueforst/dsh-toolkit/releases)
 
-[定制组件清单](docs/插件清单.md) · [首版验收记录](docs/验收记录.md)
+[定制组件清单](docs/插件清单.md) · [验收记录](docs/验收记录.md)
 
 ## 包含什么
 
@@ -13,7 +13,7 @@
 | 服务器资源 | 侧边栏“浏览器桌面”上方：CPU、内存、硬盘进度条 | 1 秒 |
 | OpenCode Go 月额度 | “浏览器桌面”下方、“更多”上方：名称、整数百分比、本月已使用 | 60 秒；服务端共享 60 秒缓存 |
 | Pi 会话费用 | 输入框统计行最前面：费用图标与总价；悬停高亮，点击展开原生风格浮窗 | 随会话结算推送 |
-| Camoufox 接入配方 | 持久化设备预设和浏览器数据、可见桌面、MCP 浏览器工具、会话独占 | 可选 Docker 运行时 |
+| Camoufox 接入配方 | 持久化设备预设和浏览器数据、可见桌面、MCP 浏览器工具、会话独占、按需启动及闲置回收 | 可选 Docker 运行时 |
 
 四条进度条统一配色：≤70% 蓝色；>70% 且 ≤90% 黄色；>90% 红色；不可用为灰色。侧栏折叠、页面不可见时暂停刷新；恢复时立即读取。
 
@@ -31,9 +31,9 @@
 在运行 DSH 的环境中执行：
 
 ```bash
-curl -fL -o forst-dsh-toolkit-0.1.0.tgz \
-  https://github.com/blueforst/dsh-toolkit/releases/download/v0.1.0/forst-dsh-toolkit-0.1.0.tgz
-dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.1.0.tgz"
+curl -fL -o forst-dsh-toolkit-0.1.1.tgz \
+  https://github.com/blueforst/dsh-toolkit/releases/download/v0.1.1/forst-dsh-toolkit-0.1.1.tgz
+dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.1.1.tgz"
 ```
 
 随后重启运行该 `web` profile 的 DSH 进程。保留下载包的位置，便于后续重新安装。

@@ -21,7 +21,7 @@
 - `broker.mjs`：共享可见浏览器及 Playwright MCP，监听容器回环地址 `9222`。
 - `mcp-proxy.mjs`：把会话 stdio MCP 转发到共享浏览器 broker。
 - `provider.mjs`：通过 DSH 的 `mountSessionMcp()` 实现独占、工具归属和释放。
-- `entrypoint.sh`：启动 Xvfb、Openbox、VNC、noVNC 和浏览器，再启动 DSH。
+- `entrypoint.sh`：启动 Xvfb、Openbox、VNC、noVNC 和 broker，再启动 DSH；浏览器按需启动。
 - `web.cordis.patch.yml`：启用浏览器服务、provider 与桌面入口；默认使用公网 HTTPS 443 的 noVNC 反代路径。
 
 `/json/new` 和 `/json/activate` 只兼容桌面入口的打开与激活动作；这是 Firefox/Playwright 运行时，不提供完整 Chromium CDP 协议。
@@ -36,7 +36,7 @@ cp integrations/camoufox/.env.example integrations/camoufox/.env
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml config
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml up -d --build
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml exec -T dsh \
-  dsh plugin --profile web add --ignore-scripts --save-exact /opt/dsh-toolkit-dist/forst-dsh-toolkit-0.1.0.tgz
+  dsh plugin --profile web add --ignore-scripts --save-exact /opt/dsh-toolkit-dist/forst-dsh-toolkit-0.1.1.tgz
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml restart dsh
 ```
 
@@ -57,3 +57,15 @@ DSH 认证与 TLS 证书按部署环境配置。本配方把 Web 和 noVNC 端�
 持久数据分别在命名卷 `dsh-home` 和根目录 `workspace/`。修改 `DSH_PUBLIC_HOST` 后，需要同步修改 Nginx 域名并重启。浏览器桌面默认 `desktopPort: 443`，如使用其他公网端口，要相应修改 patch。
 
 浏览器兼容性以目标网站和版本的实际测试为准。客户端代理、DNS 和 Clash 规则由部署环境管理。
+
+## 浏览器生命周期
+
+运行时 `1.1.0` 起，容器启动、MCP 初始化、工具列表及 `/health`、`/json/version`、`/json/list` 轮询均不启动浏览器，也不延长闲置时间。首次浏览器工具调用或桌面打开 URL 时才启动唯一的共享实例；空桌面发生键鼠输入时，也会自动唤醒浏览器。
+
+默认连续闲置三十分钟后关闭全部标签页和浏览器进程。设置 `DSH_BROWSER_IDLE_TIMEOUT_MS` 可调整毫秒数（最小 1000），Compose 默认 `1800000`。浏览器工具运行中和下载尚未完成时暂缓回收；操作结束重新计时。X11 键鼠输入会续期，仅读取闲置计数，不记录输入内容。无法读取桌面计数时暂缓回收并输出错误。
+
+`browser_close` 真正释放整个共享实例；工具说明和 MCP 指令提示 AI 在完成整项浏览器任务后调用。AI 未主动关闭时仍有闲置回收兜底。关闭时不保留打开的标签页和未提交表单，配置目录中的 Cookie、登录数据及设备预设保留。下次调用重新启动，同一外层 MCP 会话仍可继续使用，不需要新建 DSH 会话。
+
+外层 HTTP MCP 会话与内层 Playwright backend 分开存活；每次回收都清理绑定旧上下文的 backend。stdio 代理退出时发送 MCP DELETE，释放 broker 的会话记录，防止只关闭本地连接留下远端对象。
+
+升级运行时需要重新构建并重建容器。只升级统一插件 `.tgz` 不会替换 Docker 内的浏览器接入脚本。升级前保留旧镜像和 Compose，回滚时恢复旧 image 并重建服务；无需删除持久数据。停机或闲置回收后，已打开的网页需要重新打开。

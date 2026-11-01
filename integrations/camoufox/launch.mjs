@@ -28,7 +28,7 @@ export async function launch(profile, proxy) {
   }
   return Camoufox({
     persistent_context: true,
-    firefox_user_prefs:securityPrefs,
+    firefox_user_prefs: { ...securityPrefs, 'browser.startup.page': 0, 'browser.sessionstore.resume_from_crash': false },
     main_world_eval: true,
     user_data_dir: profile,
     headless: false,

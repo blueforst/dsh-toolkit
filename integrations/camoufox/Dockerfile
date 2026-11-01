@@ -16,7 +16,7 @@ RUN npm ci --ignore-scripts --no-audit --no-fund \
     && chmod -R a+rX cache \
     && ln -s /usr/local/lib/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai node_modules/@deepseek-ai \
     && rm -rf /var/lib/apt/lists/* /root/.npm
-COPY launch.mjs broker.mjs mcp-proxy.mjs ./
+COPY launch.mjs broker.mjs lifecycle.mjs desktop-idle.py mcp-proxy.mjs ./
 COPY provider.mjs ./provider.mjs
 COPY web.cordis.patch.yml /opt/deepseek-harness/web.camoufox.patch.yml
 COPY entrypoint.sh /usr/local/bin/dsh-camoufox-entrypoint
