@@ -86,6 +86,22 @@ test('下载保护与显式关闭请求：下载完成才释放', async () => {
   assert.equal(f.retired(), 1);
 });
 
+test('完整桌面不因其他应用的键鼠唤醒浏览器；已有浏览器仍续期和回收', async () => {
+  const f = fixture({ desktopWakeEnabled: false });
+  f.advance(1000); f.input(); await f.manager.checkIdle();
+  assert.equal(f.launches(), 0);
+  await f.manager.run(() => {});
+  f.advance(4000); f.input();
+  f.advance(2000); await f.manager.checkIdle();
+  assert.equal(f.manager.status().running, true);
+  f.advance(3000); await f.manager.checkIdle();
+  assert.equal(f.manager.status().running, false);
+  f.advance(1000); f.input(); await f.manager.checkIdle();
+  assert.equal(f.launches(), 1);
+  await f.manager.run(() => {});
+  assert.equal(f.launches(), 2);
+});
+
 test('桌面探测失败不误关；浏览器被手动关闭后不退出服务且能够重启', async () => {
   const f = fixture({ readDesktopIdle: async () => { throw new Error('X11 故障'); } });
   await f.manager.run(() => {});

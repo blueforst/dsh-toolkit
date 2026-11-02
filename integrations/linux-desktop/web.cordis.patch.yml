@@ -1,0 +1,10 @@
+# 与已有 Camoufox patch 一起加载。不要同时启用另一个 Computer Use provider。
+- insert:
+    - id: linux-desktop-computer-use-service
+      name: '@deepseek-ai/dsh-computer-use'
+    - id: linux-desktop-computer-use
+      name: '/opt/dsh-linux-desktop/provider/lib/index.js'
+      config:
+        command: '/usr/local/bin/cua-driver'
+        args: [mcp, --direct]
+        toolCallTimeoutMs: 120000

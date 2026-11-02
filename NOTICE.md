@@ -8,5 +8,7 @@
 - DeepSeek Harness：原生 Cordis、Web UI、会话投影、Pi 适配器及 Browser Use 运行时；本仓库只调用安装版本的扩展 API。
 - [Pi](https://github.com/earendil-works/pi)：模型目录与费用计算，由 DSH 安装的运行时提供。当前环境包名为 `@earendil-works/pi-ai`。
 - [Camoufox](https://github.com/daijro/camoufox)、Playwright、Playwright MCP、MCP SDK：浏览器运行时及自动化桥接。
+- [Cua Driver](https://github.com/trycua/cua)、DSH 官方 Computer Use MCP provider：Linux 桌面控制。构建时下载固定发布物并验证摘要，不把第三方二进制或 provider 源码提交到仓库。
+- Xfce、Thunar、Mousepad、xfce4-terminal 及中文字体：由 Debian 软件源安装，保留其各自授权。完整桌面镜像对上游浏览器桌面插件的客户端文字和图标作小范围调整，保留其许可证和模块身份。
 
 OpenCode Go 模型预设和额度适配属于本仓库的配置与代码，不包含该服务的账号或使用额度。

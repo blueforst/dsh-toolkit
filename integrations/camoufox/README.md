@@ -68,4 +68,6 @@ DSH 认证与 TLS 证书按部署环境配置。本配方把 Web 和 noVNC 端�
 
 外层 HTTP MCP 会话与内层 Playwright backend 分开存活；每次回收都清理绑定旧上下文的 backend。stdio 代理退出时发送 MCP DELETE，释放 broker 的会话记录，防止只关闭本地连接留下远端对象。
 
+需要应用菜单、终端与文件管理器时，可叠加 [Linux 完整桌面配方](../linux-desktop/README.md)。它使用 DSH 官方 Cua Driver MCP provider 操作桌面应用，并默认关闭任意桌面输入自动唤醒浏览器；已有浏览器仍受桌面活动保护。普通 Camoufox 配方保留原唤醒行为。
+
 升级运行时需要重新构建并重建容器。只升级统一插件 `.tgz` 不会替换 Docker 内的浏览器接入脚本。升级前保留旧镜像和 Compose，回滚时恢复旧 image 并重建服务；无需删除持久数据。停机或闲置回收后，已打开的网页需要重新打开。

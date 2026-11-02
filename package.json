@@ -1,7 +1,7 @@
 {
   "name": "@forst/dsh-toolkit",
-  "version": "0.1.1",
-  "description": "DSH 定制插件包：服务器资源、OpenCode Go 月额度、Pi 会话费用及可选 Camoufox 接入。",
+  "version": "0.1.2",
+  "description": "DSH 定制插件包：服务器资源、OpenCode Go 月额度、Pi 会话费用、可选 Camoufox 与 Linux 完整桌面接入。",
   "type": "module",
   "main": "./index.js",
   "exports": {".": "./index.js", "./client": "./client.js", "./package.json": "./package.json", "./cordis.patch.yml": "./cordis.patch.yml"},

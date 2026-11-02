@@ -2,10 +2,10 @@ import { EventEmitter } from 'node:events';
 
 // MCP 连接与浏览器进程分开存活，轮询不续期，正在执行的操作持有活动计数。
 export class BrowserLifecycle extends EventEmitter {
-  constructor({ launch, retire = async () => {}, readDesktopIdle, idleTimeoutMs = 1800000, now = Date.now }) {
+  constructor({ launch, retire = async () => {}, readDesktopIdle, desktopWakeEnabled = true, idleTimeoutMs = 1800000, now = Date.now }) {
     super();
     if (!Number.isFinite(idleTimeoutMs) || idleTimeoutMs < 1000) throw new Error('浏览器闲置时间必须至少为 1000 毫秒');
-    Object.assign(this, { launch, retire, readDesktopIdle, idleTimeoutMs, now });
+    Object.assign(this, { launch, retire, readDesktopIdle, desktopWakeEnabled, idleTimeoutMs, now });
     this.context = null;
     this.starting = null;
     this.closing = null;
@@ -94,7 +94,7 @@ export class BrowserLifecycle extends EventEmitter {
       if (!Number.isFinite(desktopIdle) || desktopIdle < 0) throw new Error('桌面闲置计数无效');
       const inputAt = this.now() - desktopIdle;
       if (!this.context) {
-        if (inputAt > this.lastStopped + 50) await this.run(() => {});
+        if (this.desktopWakeEnabled && inputAt > this.lastStopped + 50) await this.run(() => {});
         return;
       }
       this.lastActivity = Math.max(this.lastActivity, inputAt);

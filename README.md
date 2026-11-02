@@ -1,10 +1,12 @@
 # DSH Toolkit
 
-把经过实际部署的 DSH 定制整理成一个可复用插件包：**服务器资源、OpenCode Go 月额度、Pi 会话费用**。另附 **Camoufox 指纹浏览器运行时**及 **OpenCode Go 模型配置示例**。
+把经过实际部署的 DSH 定制整理成一个可复用插件包：**服务器资源、OpenCode Go 月额度、Pi 会话费用**。另附 **Camoufox 指纹浏览器运行时**、**Linux 完整桌面与 Computer Use**及 **OpenCode Go 模型配置示例**。
 
 源码与版本包：[blueforst/dsh-toolkit](https://github.com/blueforst/dsh-toolkit) · [下载发布包](https://github.com/blueforst/dsh-toolkit/releases)
 
 [定制组件清单](docs/插件清单.md) · [验收记录](docs/验收记录.md)
+
+Linux 桌面新增配方及真实截图坐标验收见 [桌面说明](integrations/linux-desktop/README.md) 与 [桌面验收记录](docs/Linux桌面验收.md)。
 
 ## 包含什么
 
@@ -14,6 +16,7 @@
 | OpenCode Go 月额度 | “浏览器桌面”下方、“更多”上方：名称、整数百分比、本月已使用 | 60 秒；服务端共享 60 秒缓存 |
 | Pi 会话费用 | 输入框统计行最前面：费用图标与总价；悬停高亮，点击展开原生风格浮窗 | 随会话结算推送 |
 | Camoufox 接入配方 | 持久化设备预设和浏览器数据、可见桌面、MCP 浏览器工具、会话独占、按需启动及闲置回收 | 可选 Docker 运行时 |
+| Linux 完整桌面 | Xfce、终端、文件管理器和文本编辑器；DSH 官方 Cua Driver MCP 接入，同一 noVNC 桌面 | 可选 Docker 扩展镜像 |
 
 四条进度条统一配色：≤70% 蓝色；>70% 且 ≤90% 黄色；>90% 红色；不可用为灰色。侧栏折叠、页面不可见时暂停刷新；恢复时立即读取。
 
@@ -25,6 +28,7 @@
 - 资源采集器适用于有 `/proc` 的 Linux；内存按整机 `MemAvailable` 计算。
 - Web UI 使用原生 Cordis、会话投影和客户端扩展点。其他 DSH 版本需要重新验证。
 - 浏览器运行时版本、来源和限制见 [Camoufox 说明](integrations/camoufox/README.md)。
+- Linux 桌面固定使用 Cua Driver `0.28.0` 和 DSH 官方 MCP provider；与仅支持 macOS 的原生 `cua` 对象接口不同。构建、验证和回滚见 [Linux 桌面说明](integrations/linux-desktop/README.md)。
 
 ## 安装一个插件包
 

@@ -22,6 +22,7 @@ const config = {
 };
 const lifecycle = new BrowserLifecycle({
   launch: () => launch('/home/node/.dsh/camoufox'),
+  desktopWakeEnabled: process.env.DSH_BROWSER_DESKTOP_WAKE_ENABLED !== '0',
   idleTimeoutMs: Number(process.env.DSH_BROWSER_IDLE_TIMEOUT_MS ?? 1800000),
   readDesktopIdle: async () => Number((await execute('python3', [new URL('./desktop-idle.py', import.meta.url).pathname], { timeout: 2000 })).stdout.trim()),
   retire: async () => { await Promise.all([...records].map(record => resetBackend(record))); },
@@ -118,7 +119,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === '/json/new' && req.method === 'PUT') {
       const target = new URL(decodeURIComponent(req.url.slice(req.url.indexOf('?') + 1)));
-      if (!['http:', 'https:'].includes(target.protocol)) return json(res, 400, { error: '仅允许 HTTP/HTTPS' });
+      if (!['http:', 'https:'].includes(target.protocol) && target.href !== 'about:blank') return json(res, 400, { error: '仅允许 HTTP/HTTPS 或 about:blank' });
       return json(res, 200, await lifecycle.run(async context => {
         const page = await context.newPage();
         try { await page.goto(target.href, { waitUntil: 'domcontentloaded', timeout: 45000 }); }
