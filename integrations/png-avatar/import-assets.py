@@ -49,7 +49,7 @@ for name in ['LICENSE', 'ASSET_LICENSE.md']:
     (target / name).write_bytes(download(name))
 (target / 'ATTRIBUTION.txt').write_text(
     f"作者：{lock['author']}\n仓库：https://github.com/{lock['repository']}\n版本：{lock['commit']}\n"
-    '修改：提取部分整身动画帧，统一缩小为 320 像素；思考动作改为循环；加入走路镜像差分。\n'
+    '修改：提取部分整身动画帧，统一缩小为 320 像素；思考动作使用托腮与歪头帧并保持；加入走路镜像差分。\n'
     '作者对其新增贡献授权；底层社区角色参考权利仍按原作者声明处理。\n')
 (target / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2))
 print(json.dumps({'preparedFrames': len(list(target.glob('*.png'))), 'bytes': sum(p.stat().st_size for p in target.iterdir()),

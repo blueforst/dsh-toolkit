@@ -177,7 +177,7 @@ def choose(action, elapsed):
     if clip['loop']:
         elapsed %= total
     elif elapsed >= total:
-        return manifest['actions']['idle']['files'][0]
+        return clip['files'][-1] if clip.get('hold') else manifest['actions']['idle']['files'][0]
     for name, ms in zip(clip['files'], clip['times']):
         if elapsed < ms:
             return name

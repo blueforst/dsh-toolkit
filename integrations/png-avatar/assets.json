@@ -6,13 +6,12 @@
   "sources": {
     "idle-front.png": {"blob": "e19f88b5826aba89ea2aa0d086d31d40c9def912", "columns": 2},
     "dense-wave.png": {"blob": "f9fc5cf57b041e6b30d2ee6abd10a34602b09554", "columns": 4},
-    "story-token.png": {"blob": "50edf1bab5aa1de428f6e39bb12c8b8d39fc10f3", "columns": 4},
     "actions.png": {"blob": "811c8496744ad137e305b3fe595a5f4792a35af6", "columns": 4},
     "inbetween-walk.png": {"blob": "c84213762f8cba68b4d502dd13771983831763e9", "columns": 4}
   },
   "actions": {
     "idle": {"atlas": "idle-front.png", "frames": [0, 1, 0], "times": [5200, 160, 100], "loop": true},
-    "thinking": {"atlas": "story-token.png", "frames": [0, 1, 2, 1], "times": [600, 250, 900, 250], "loop": true},
+    "thinking": {"atlas": "actions.png", "frames": [2, 3], "times": [1800, 1400], "loop": false, "hold": true},
     "wave": {"atlas": "dense-wave.png", "frames": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31], "times": [80, 70, 65, 65, 70, 65, 65, 65, 65, 70, 65, 65, 70, 75, 80, 100], "loop": false},
     "happy": {"atlas": "actions.png", "frames": [0, 4, 4, 0], "times": [180, 500, 250, 180], "loop": false},
     "sad": {"atlas": "actions.png", "frames": [0, 9, 9, 0], "times": [150, 700, 300, 150], "loop": false},

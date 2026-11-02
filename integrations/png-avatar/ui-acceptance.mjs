@@ -27,9 +27,13 @@ try {
   assert.equal(await page.locator('#controls button').count(), 8);
   await page.getByRole('button', { name: '思考中', exact: true }).click();
   await sleep(600);
+  assert.equal(await page.evaluate(() => lastFrame), 'actions-2.png');
+  await sleep(3600);
+  assert.equal(await page.evaluate(() => state.action), 'thinking');
+  assert.equal(await page.evaluate(() => lastFrame), 'actions-3.png', '思考动作结束后应保持托腮姿势');
   await page.screenshot({ path: output + '/avatar-preview.png', fullPage: true });
   assert.equal((await context.request.get(origin + '/avatar/api/state')).status(), 200);
-  const report = { preview: true, preparedFrames: await page.evaluate(() => Object.keys(images).length), controls: 8, realModelTest: false };
+  const report = { preview: true, preparedFrames: await page.evaluate(() => Object.keys(images).length), controls: 8, thinkingPoseHeld: true, realModelTest: false };
   if (await page.locator('#recording').isVisible()) {
     const partial = await context.request.get(origin + '/avatar/preview.mp4', { headers: { Range: 'bytes=0-31' } });
     assert.equal(partial.status(), 206);

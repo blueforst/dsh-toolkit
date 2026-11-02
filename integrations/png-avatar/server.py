@@ -74,7 +74,7 @@ def frame_name(state=None):
     if clip['loop']:
         elapsed %= duration
     elif elapsed >= duration:
-        return MANIFEST['actions']['idle']['files'][0]
+        return clip['files'][-1] if clip.get('hold') else MANIFEST['actions']['idle']['files'][0]
     for name, ms in zip(clip['files'], clip['times']):
         if elapsed < ms:
             return name
