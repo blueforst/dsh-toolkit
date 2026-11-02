@@ -10,5 +10,6 @@
 - [Camoufox](https://github.com/daijro/camoufox)、Playwright、Playwright MCP、MCP SDK：浏览器运行时及自动化桥接。
 - [Cua Driver](https://github.com/trycua/cua)、DSH 官方 Computer Use MCP provider：Linux 桌面控制。构建时下载固定发布物并验证摘要，不把第三方二进制或 provider 源码提交到仓库。
 - Xfce、Thunar、Mousepad、xfce4-terminal 及中文字体：由 Debian 软件源安装，保留其各自授权。完整桌面镜像对上游浏览器桌面插件的客户端文字和图标作小范围调整，保留其许可证和模块身份。
+- [YunYueSama/codex-deepseek-pet](https://github.com/YunYueSama/codex-deepseek-pet)：纯 2D 角色素材来源。可选导入器固定提交并提取、缩小部分整身帧，增加走路镜像；原始角色图片不随本仓库分发。作者对其有权授权的贡献采用自定义署名许可，底层社区参考和其他第三方权利仍按原项目 `ASSET_LICENSE.md` 处理。
 
 OpenCode Go 模型预设和额度适配属于本仓库的配置与代码，不包含该服务的账号或使用额度。

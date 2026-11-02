@@ -1,0 +1,5 @@
+- insert:
+    - id: png-avatar
+      name: /home/node/.dsh/integrations/png-avatar/provider.mjs
+      config:
+        configFile: /home/node/.dsh/avatar/config.json

@@ -1,0 +1,46 @@
+services:
+  avatar:
+    build: .
+    image: local/dsh-png-avatar:0.1.0
+    restart: unless-stopped
+    user: "1000:1000"
+    ports:
+      - "${AVATAR_BIND_IP:-127.0.0.1}:19380:19380"
+      - "${AVATAR_BIND_IP:-127.0.0.1}:19381:19381"
+    volumes:
+      - ./data:/data
+      - ./avatar.token:/run/secrets/avatar_token:ro
+    mem_limit: 384m
+    memswap_limit: 384m
+    cpus: 0.5
+    pids_limit: 64
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    healthcheck:
+      test: [CMD, python3, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:19380/health', timeout=2).read()"]
+      interval: 20s
+      timeout: 3s
+      retries: 3
+  encoder:
+    profiles: [capture]
+    image: local/dsh-png-avatar:0.1.0
+    network_mode: service:avatar
+    user: "1000:1000"
+    entrypoint: [python3, /app/render.py]
+    environment:
+      AVATAR_CAPTURE_SECONDS: ${AVATAR_CAPTURE_SECONDS:-30}
+      AVATAR_OVERLAY: ${AVATAR_OVERLAY:-0}
+    volumes:
+      - ./data:/data
+    cpus: 1.8
+    mem_limit: 640m
+    memswap_limit: 640m
+    pids_limit: 64
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]

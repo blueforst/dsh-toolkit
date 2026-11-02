@@ -1,0 +1,20 @@
+services:
+  desktop-pet:
+    build: .
+    image: local/dsh-png-avatar:0.1.0
+    network_mode: container:${DSH_CONTAINER:-dsh-deepseek-harness-1}
+    user: "1000:1000"
+    entrypoint: [python3, /app/desktop-pet.py]
+    environment:
+      DISPLAY: :99
+    volumes:
+      - ./desktop-data:/data
+      - ./desktop.token:/run/secrets/avatar_token:ro
+    restart: unless-stopped
+    cpus: 0.3
+    mem_limit: 160m
+    memswap_limit: 160m
+    pids_limit: 32
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
