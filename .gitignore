@@ -14,3 +14,8 @@ __pycache__/
 ._*
 .dsh/
 workspace/
+integrations/png-avatar/data/
+integrations/png-avatar/avatar.token
+integrations/png-avatar/.env
+integrations/png-avatar/desktop.token
+integrations/png-avatar/desktop-data/

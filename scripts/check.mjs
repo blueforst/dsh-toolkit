@@ -9,7 +9,7 @@ function walk(directory) {
     if (['.git', 'node_modules', 'dist', '__pycache__'].includes(entry.name)) continue;
     const path = `${directory}/${entry.name}`;
     if (entry.isDirectory()) walk(path);
-    else if (/\.(m?js)$/.test(path)) {
+    else if (/\.([mc]?js)$/.test(path)) {
       const result = spawnSync(process.execPath, ['--check', path], { encoding: 'utf8' });
       if (result.status !== 0) throw new Error(result.stderr);
       checked++;

@@ -1,0 +1,687 @@
+{
+  "repository": "YunYueSama/codex-deepseek-pet",
+  "commit": "7661c8b304c5400701f91da01b1a643a207331de",
+  "author": "YunYueSama",
+  "files": [
+    {
+      "path": "ASSET_LICENSE.md",
+      "blob": "ef7cd63ee2672a0da5126cef06057ce0233c5843"
+    },
+    {
+      "path": "LICENSE",
+      "blob": "57a0bb973d4a0a6ecc25716de05f9598dae11bf9"
+    },
+    {
+      "path": "assets/fonts/OFL.txt",
+      "blob": "046fc66490024a7a8b928e2485f12349e522c936"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-032133d339d5.woff2",
+      "blob": "4e64346ab1208a5d0603dd464b33892a486ff2f3"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-038988b9ce05.woff2",
+      "blob": "7e41e12ad31f73328b198dd70d881cafaa9e520d"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-03dcbdce9562.woff2",
+      "blob": "872a3373aa753040b6d96f6a267edf730ce079e0"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-04a269894c40.woff2",
+      "blob": "88ebc27f68e988c3ce317eeaf5e497320aaf6643"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-087d91daec02.woff2",
+      "blob": "e9b77406cf091bdd28f019be89499905367c7374"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-092b908aedd7.woff2",
+      "blob": "46b1393179bac1171fdb79e4ec1a3dfb23442b27"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-0931bf8ea722.woff2",
+      "blob": "0f03177a4998eec6acd325c772e4984123a52f6f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-0a274c73d620.woff2",
+      "blob": "e585df28b52e4e00006b27224e6e5918614028b3"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-0ed19348b9ac.woff2",
+      "blob": "c7acba2aa42e921a3ce3774872ff5a206f3497a5"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-1402df11d4b7.woff2",
+      "blob": "0a7403d287efbf79c2ec88bbd56ee4326e906f4d"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-155371bb76e3.woff2",
+      "blob": "c6e451ad2ee8d0f2685e64145b61d9d13292fa57"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-198318a26fef.woff2",
+      "blob": "898139ac9e149be1a89b274170c0818096e323da"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-1b5b7e6eba0a.woff2",
+      "blob": "9d8e60f6fa9035e2b13e185b78834056b26f6765"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-1bd4082ecf77.woff2",
+      "blob": "430a8be0dba0eb3cf9a81674c009c0389da6f58e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-1d36caa852ee.woff2",
+      "blob": "c1375e8869b68fbd15237e63380b82a9b53c1e55"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-20b2e93a5303.woff2",
+      "blob": "8dfea1a9b81612bf891563e98008745d84d54553"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-22c78938835f.woff2",
+      "blob": "871f7c27f308637b42c088caecd6d64bb9eeae37"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-27e6d1a3e813.woff2",
+      "blob": "d4b1547589b881fcedd93cdfc99c33636023a01e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-28302b1b4d06.woff2",
+      "blob": "88604f6a0494e7fc2c3777e3e40319ef4a61f61c"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-286168fa3f8c.woff2",
+      "blob": "2b83445910caaae1884ad774a7573025dc948751"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-2aadb8d018f6.woff2",
+      "blob": "4cb65ab8f509de435dbf3473444b93e57b13623b"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-2b99bfe3ebbb.woff2",
+      "blob": "78e59bfea90e69053243a1c19ff1cb6fb4364244"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-2b9a72a0157f.woff2",
+      "blob": "b894cd6bbf546eb6655d06a83cf26aa00a232568"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-31deec0c69ec.woff2",
+      "blob": "36c35e5f413c0e447527b0d26ca97fad39ef6c52"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-32064b13723d.woff2",
+      "blob": "36f48ede690200e8d8dd582cc6138af0022b6dde"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-32e1b98d5994.woff2",
+      "blob": "72042cbcce7e704b8ac025cd3fae3dcd967e8b9c"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-4984939cfbdf.woff2",
+      "blob": "1204e62916dbfc533ba62df6d46213ae3cd951fb"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-4c4cd6ef1dbb.woff2",
+      "blob": "a0258ca95aa46196be71d8115af9194b3260eb0d"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-4e65935907a0.woff2",
+      "blob": "557d59115199076a9869179b832aff237ce84c4f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-4f7bc6b6b51b.woff2",
+      "blob": "3d0a779572dc37e2c73fe18572553c42ffcec547"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-5209f425a967.woff2",
+      "blob": "c088f73e991b7cc6d1bea1d3d33add72adf52083"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-53b49f61dc76.woff2",
+      "blob": "daebe311a2c35a1bfaed7baf4f212d937bc1a4f4"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-550c508b2da2.woff2",
+      "blob": "3b2680ae21f0439c4a0ffa7f390950c3c890c879"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-5bd78eaa1e1a.woff2",
+      "blob": "50b41bff321149cd46b1cc6bc555e4d90c87a1b0"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-5f82871e5584.woff2",
+      "blob": "48d02426cd51770eb9ba2678b561b2d358665e18"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-60e16a0fc5c4.woff2",
+      "blob": "8f6dca4e8c169c12e33bad2224ce1bfb2bf3c115"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-648e7d3f5a03.woff2",
+      "blob": "de5d8c508256fdf073661259c9c8a19d61237103"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-668cb1a99157.woff2",
+      "blob": "ed618bc54bb72ef13ab7d9aa5e070184d9b5b40b"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-66c35dc76153.woff2",
+      "blob": "859cb9adc298e3de6df7fb553022bcb782ac640e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-674be02327f6.woff2",
+      "blob": "1211948fcf371cc90c720e62f69086bcbc4eb60e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-68cf19eb70c5.woff2",
+      "blob": "c955b9d555df0f6fb70438889ba1d859661e514c"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-6d6246c6fd7a.woff2",
+      "blob": "b767b8ffcaca7478d7bfa5ab81110e70fa7c8083"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-70b69aa90209.woff2",
+      "blob": "df12e3060de3f4172654c8f475519a5fc7351f0f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-70c38bdf2927.woff2",
+      "blob": "a8f97db5b87b2507d9b1df17af6e0fb0556f8880"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-72b8d3706a36.woff2",
+      "blob": "abb35411cabafd9fa6f23adb5d0072e0dbf9539b"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-748c49190e86.woff2",
+      "blob": "f39284824d091a278cf40787c5f4e3fa1e0fe3dc"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-74edac9ceae0.woff2",
+      "blob": "2c58705173fc8740a1f838fd6c7e381827b3f34e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-781006ca8d54.woff2",
+      "blob": "de83b634c28965aed422bbc679a0e03ee1161cf6"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7b8dd20a7927.woff2",
+      "blob": "05f26cb5fc5e75edd2830c3bde1d569ddd2c409e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7cee9b36e6ec.woff2",
+      "blob": "72d2db55b771b66bdf81b002d8d901d4b0524d45"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7d438466bfc5.woff2",
+      "blob": "5c588141638e9ce37d5430cc48b02f9bcaa6742f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7db027f41d88.woff2",
+      "blob": "7ed976c5b98713487e2f8b1c283fb4a4cbc48bfd"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7dbf09a682a4.woff2",
+      "blob": "7d1907b3c08467683a746bad3d7495f1a562116a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7dff162a5590.woff2",
+      "blob": "9ff8dcfa97d87fa72162f83c499b56b9f2f58509"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7fab1516bb96.woff2",
+      "blob": "18520ac196d60e68a111e14dea667a3653a215c0"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-7fb9b4a84d1f.woff2",
+      "blob": "234212b38e7e2ecb524d00bc9b4244dfe9357ac2"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-85ac5231f9a5.woff2",
+      "blob": "d792611c5f35bf131f646c2346c4c1399fd2c5e3"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-8b2392a29608.woff2",
+      "blob": "0444ad8d13c36a604e8874cbcd4fd5d21e7d9f4d"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-8c63cc77c1d2.woff2",
+      "blob": "f31af0cc51cceceffc5b694b6e008938e5a04173"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-8fbd3b1114a2.woff2",
+      "blob": "4b04ee0c899146b621fb4654e7e3bf029f276450"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-9335e5aa92ad.woff2",
+      "blob": "26bda6d454878de847417f75d12a50bb1a08fe32"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-9513ffe226ca.woff2",
+      "blob": "a6972236fafd7143d5a1b26c1b08fd23ccfaf24a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-992ce1137e06.woff2",
+      "blob": "0138a01165a302cd2eb67896c9f0f7406404abcd"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-99b09b56bada.woff2",
+      "blob": "c22390c40743610dc84c9de3051d33fad05a4b33"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-9d298d19de6f.woff2",
+      "blob": "9cedd7d207b345645c8a07191a7439ead40de7f5"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-a39469f99e4d.woff2",
+      "blob": "a03fad7dfd0e149fe98d738360fd8ef3299bc0d6"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-a888b15fb48d.woff2",
+      "blob": "b0e70e1d547949e61ccbebd5e97a29155b679bae"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-a914664a32e6.woff2",
+      "blob": "1a88b459cbe24d4a07ef2db03696c7b5d15a861c"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-a9d450627989.woff2",
+      "blob": "4bd20c0367ee57076a98abd9f46e7a436e14a643"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-af0c95a3e897.woff2",
+      "blob": "bcf41a3de9ac291cea1ae84ccaf1f7557339cca2"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-b05da70aec9b.woff2",
+      "blob": "68d036b035e5f9831645b2341375f1705c11726b"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-b143c83177a8.woff2",
+      "blob": "7a167625957d88fc55353c64b45c60b40385c97a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-b5b61d6a1157.woff2",
+      "blob": "b28386d908ab3c2f38c145653a559e8fd58bed18"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-b7c1d9752425.woff2",
+      "blob": "aa613b9a340414c39c47b8e074bea76bab9cb43d"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-bc969adb767f.woff2",
+      "blob": "0404c4d80ac3267eacf31ed432815a128802e0b6"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-c257f9abfc8b.woff2",
+      "blob": "e7623846b5a68db879415fedf98aed7b1dd96b51"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-c4afcce8095f.woff2",
+      "blob": "bd92532f76e1c1080a30c51bbc81911491205f67"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-c4d16a9a50ff.woff2",
+      "blob": "22b87603947fdfb0247bcc121a44433c2189b9a0"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-c719a170320a.woff2",
+      "blob": "de14a02cb01ec0f24de7841318d8239a0982636e"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-c79ebadffcbc.woff2",
+      "blob": "e44027b5c9aa0a4553b1a8f074d1a390c26915c8"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-cb42250607c1.woff2",
+      "blob": "643b752ba84bbc431deeec75ae55b292df44c0ff"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-cd4f2bb208b1.woff2",
+      "blob": "402109b91ca5fa5842c55f38cbb60a5b4c7526a3"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-cd9fa7f26093.woff2",
+      "blob": "0f61acaba97c4654e08731171c7e39a02afa7c1a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-ce64b49d6f17.woff2",
+      "blob": "9a65f91e27da2f941f99029efcd15e1c1f650d95"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-d02835c0c38d.woff2",
+      "blob": "d3a45f759304f384b4d85bf106249bbc763656c5"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-d422930c7097.woff2",
+      "blob": "49af93a4e80b0ebcf68355ac273fd6c50cebe562"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-d4be17011f92.woff2",
+      "blob": "a46beab97fee340ef65a3a91c57744d14c0b2ce2"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-d64a121cdd32.woff2",
+      "blob": "e2710fb5ad13339553c3f2e85dc7daf4c6fdc7b6"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-dadb6d424a9b.woff2",
+      "blob": "a493b638162c3818a211f103febc45bf5226d13a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-e07bb10e282b.woff2",
+      "blob": "8acaa06b8c8d33ad862f7c549aa67445be137865"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-e16a579d7e3f.woff2",
+      "blob": "fc58585f0eb8ec2eabe05dc042ee770bdc962202"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-e3e327821de4.woff2",
+      "blob": "a04429375a6354dd368fd96a615fe5c91b106e16"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-e4e121ebf09a.woff2",
+      "blob": "59c872a03121d7c32667d42c15d6e5d3a8de431f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-ee1c7471882e.woff2",
+      "blob": "7f519091611f05f69bd3c862bce81950289d52ab"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-f08743b21577.woff2",
+      "blob": "a55871d9c19f41bc3a481a1aae051d09a5f8916a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-f1b0994f0406.woff2",
+      "blob": "a013b857b13d73ee0f12d897754882b4021dbf0a"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-f2fd13483579.woff2",
+      "blob": "51a0f5186b56d910cb515a3e8b0f9af120c7c8f3"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-f59d441e134d.woff2",
+      "blob": "07813675ae9cee2a8ed1a42c7c709ac1ebfc526f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-f97119290ab5.woff2",
+      "blob": "06931e26caa6e60bad5ce3db72944f4a6401d0cf"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-fb801f29c9aa.woff2",
+      "blob": "8003b59406e1b1cfc5433493b18b927ecee5826f"
+    },
+    {
+      "path": "assets/fonts/noto-serif-sc-ff6d9a53e368.woff2",
+      "blob": "55b962280d5e823a1a4b35887201cf7b9edcc777"
+    },
+    {
+      "path": "assets/whale/actions.png",
+      "blob": "811c8496744ad137e305b3fe595a5f4792a35af6"
+    },
+    {
+      "path": "assets/whale/dense-dance.png",
+      "blob": "2e181a99a7cf96ea902283fba9d65a67d1f96e66"
+    },
+    {
+      "path": "assets/whale/dense-eat.png",
+      "blob": "3730664a98715e5a99fac3bf937fbdfdc08fe4f4"
+    },
+    {
+      "path": "assets/whale/dense-idle.png",
+      "blob": "74487a6f23a7c98a2bf3c18383f7d018b0a981d9"
+    },
+    {
+      "path": "assets/whale/dense-jump.png",
+      "blob": "2b9611052979b89468f47d9ec4d63ef1f2cee28c"
+    },
+    {
+      "path": "assets/whale/dense-sleep.png",
+      "blob": "b4bf797da413eac0cf715baf8d8f5937c5da5b31"
+    },
+    {
+      "path": "assets/whale/dense-sneak.png",
+      "blob": "d2dec7548296a136b404eca3460efb4b752d7ccf"
+    },
+    {
+      "path": "assets/whale/dense-walk.png",
+      "blob": "ea03200febb2888f93243565001bb74487142ddc"
+    },
+    {
+      "path": "assets/whale/dense-wave.png",
+      "blob": "f9fc5cf57b041e6b30d2ee6abd10a34602b09554"
+    },
+    {
+      "path": "assets/whale/expressions.png",
+      "blob": "018d1ad59c9775978b77cb29522ed50f4d46acc7"
+    },
+    {
+      "path": "assets/whale/idle-front.png",
+      "blob": "e19f88b5826aba89ea2aa0d086d31d40c9def912"
+    },
+    {
+      "path": "assets/whale/inbetween-jump.png",
+      "blob": "57a799bdb58d7347f1ae5a0ef2162d9bc570fc5e"
+    },
+    {
+      "path": "assets/whale/inbetween-sleep.png",
+      "blob": "f7b68276899a3510c030f48de2800f69cf8aba9b"
+    },
+    {
+      "path": "assets/whale/inbetween-walk.png",
+      "blob": "c84213762f8cba68b4d502dd13771983831763e9"
+    },
+    {
+      "path": "assets/whale/manifest.json",
+      "blob": "3f257c0d39ba7dc0366f187f6f5ea1b052dd7c20"
+    },
+    {
+      "path": "assets/whale/motion-basic.png",
+      "blob": "4fb7de5f4f97f8c1bdb318f2226876889a655f7d"
+    },
+    {
+      "path": "assets/whale/motion-extra.png",
+      "blob": "14ffb57cf6877639b41dfa971c89d607b5ec10fb"
+    },
+    {
+      "path": "assets/whale/motion-flow.js",
+      "blob": "e409ac44a5be8eb63e60cbf881cdbaa4a73c4b0f"
+    },
+    {
+      "path": "assets/whale/motion-flow.png",
+      "blob": "c6410f5297e7c19accee405efd059a9b34ffd238"
+    },
+    {
+      "path": "assets/whale/motion-idle.png",
+      "blob": "d4160665b50ca95d0715c7d19109dee19b1cffcd"
+    },
+    {
+      "path": "assets/whale/motion-turn.png",
+      "blob": "ae0a096e5c1df658bb9626d9c3901e1803c425ac"
+    },
+    {
+      "path": "assets/whale/motion-walk.png",
+      "blob": "75d596f6e26dcfd41809e09d7eeffa9fdb4b3ecc"
+    },
+    {
+      "path": "assets/whale/portrait.png",
+      "blob": "4afdeae2b6f5212c6c17006ff22847bfa5d4d57e"
+    },
+    {
+      "path": "assets/whale/story-hum.png",
+      "blob": "2aacfc7d987d70fcf10897a8d55b0b6eed960b2a"
+    },
+    {
+      "path": "assets/whale/story-meal.png",
+      "blob": "7e5a5d5239ad1a04f327a7adc04d5e818d25353f"
+    },
+    {
+      "path": "assets/whale/story-tail.png",
+      "blob": "3e4d94a81e80fa5d6fee556c9b1412a54ac55d82"
+    },
+    {
+      "path": "assets/whale/story-token.png",
+      "blob": "50edf1bab5aa1de428f6e39bb12c8b8d39fc10f3"
+    },
+    {
+      "path": "assets/你这吃白饭的蓝色大肥鱼.png",
+      "blob": "00d601c3961a6118c09e34cdbc670725d8704a06"
+    },
+    {
+      "path": "build/icon.ico",
+      "blob": "ff9813aeaab06a84875a14538a865d77b9beb16e"
+    },
+    {
+      "path": "build/icon.png",
+      "blob": "e6ad3d71371fc6ec653a22972f24acae11a1779e"
+    },
+    {
+      "path": "codex-deepseek-pet/pet.json",
+      "blob": "8bf65fc2b86f957f07f79ec3ddcf4d2a1c268347"
+    },
+    {
+      "path": "codex-deepseek-pet/spritesheet-web.webp",
+      "blob": "40cc21039ac43d21c0f1a9e01e0cc05a1c3e5cbd"
+    },
+    {
+      "path": "codex-deepseek-pet/spritesheet.webp",
+      "blob": "e8d0895c47f517b4bb5e630e8ee4fc528d0b8bb0"
+    },
+    {
+      "path": "package.json",
+      "blob": "4779b2a0f349c388529effc62654f70d9d690910"
+    },
+    {
+      "path": "src/main/behavior.cjs",
+      "blob": "7e561285e6bf803203c029478cd5f425ca438900"
+    },
+    {
+      "path": "src/main/chat.cjs",
+      "blob": "f7871d2bc81de632eca2137901c102be16f6bfd7"
+    },
+    {
+      "path": "src/main/environment.cjs",
+      "blob": "54831802b7adcd14eca3318362dbb3d1aed9ff2a"
+    },
+    {
+      "path": "src/main/foreground.ps1",
+      "blob": "5ea6dcfd27710228824cffc6847b162cb96733cd"
+    },
+    {
+      "path": "src/main/geometry.cjs",
+      "blob": "5d40c67a10997a53fc75c142d291cad0debe274b"
+    },
+    {
+      "path": "src/main/main.cjs",
+      "blob": "b464b045428d7bd5a450af55373cedcc2a5083ee"
+    },
+    {
+      "path": "src/main/physics.cjs",
+      "blob": "a00e6b600330ac98451af1c448706fdbae4cbe38"
+    },
+    {
+      "path": "src/main/settings.cjs",
+      "blob": "1338f29ee38a1413ddac146253ee91793ad89819"
+    },
+    {
+      "path": "src/main/vault.cjs",
+      "blob": "c182860c3af6d000b662589e283c5c79aa8c4d21"
+    },
+    {
+      "path": "src/main/walk.cjs",
+      "blob": "948e2c163c3ad75cb7c820454f0c769a4e76d088"
+    },
+    {
+      "path": "src/main/window-probe.cs",
+      "blob": "69f22d2d8bc71fd1eac99c1ca8b9c0e67297ef8e"
+    },
+    {
+      "path": "src/preload.cjs",
+      "blob": "8b3b7b9d06f081f213ff171f7146e520d0c6c857"
+    },
+    {
+      "path": "src/renderer/app.js",
+      "blob": "6dfba58f1f19a6bd795863449eaf039c50ebee2b"
+    },
+    {
+      "path": "src/renderer/companion.css",
+      "blob": "16679c84bcef587b4e2e995b4c9c3855cf3c74f9"
+    },
+    {
+      "path": "src/renderer/companion.html",
+      "blob": "9c5415fb591add410ba792dd8ca3cc8045c93748"
+    },
+    {
+      "path": "src/renderer/companion.js",
+      "blob": "42eb170ef65e99bb1cd3c33a0210014f5a2ba9f3"
+    },
+    {
+      "path": "src/renderer/flow.js",
+      "blob": "bdeb9235c9b0f5f6a59223689e0d78ef83a502d9"
+    },
+    {
+      "path": "src/renderer/fonts.css",
+      "blob": "9180e1903470b0e9c60cfac621ca96e5c81aed05"
+    },
+    {
+      "path": "src/renderer/index.html",
+      "blob": "d8a00f720597f0499916cb0a7539ac0f969cd045"
+    },
+    {
+      "path": "src/renderer/motion.js",
+      "blob": "2f04719943e4a4a1a36c7d3132b90ba2d12a0085"
+    },
+    {
+      "path": "src/renderer/styles.css",
+      "blob": "f65bc1a896039857a8d789d54c1c52fb1bb98000"
+    },
+    {
+      "path": "tests/assets.test.cjs",
+      "blob": "be7af7d0ac36533a5512426c212b96475282dc53"
+    },
+    {
+      "path": "tests/behavior.test.cjs",
+      "blob": "9351e7ef8c0b4701b36345f205a85fe70f4425ab"
+    },
+    {
+      "path": "tests/chat.test.cjs",
+      "blob": "b90581fbc459d87bb99c6fc69102f1bdb328dc71"
+    },
+    {
+      "path": "tests/environment.test.cjs",
+      "blob": "98e15a2105745d3903d37dc2a401531481b0e6f7"
+    },
+    {
+      "path": "tests/flow.test.cjs",
+      "blob": "1ad4eb90f06d2829dc8711a0bcf8dc7434ac14cd"
+    },
+    {
+      "path": "tests/geometry.test.cjs",
+      "blob": "2af5bb8b0e2c2cd2e3da5d4c07f4cf5fae886bf6"
+    },
+    {
+      "path": "tests/motion.test.cjs",
+      "blob": "98e0dec482ff1f31c0644b1707816932d14c24a3"
+    },
+    {
+      "path": "tests/physics.test.cjs",
+      "blob": "33324511bc86d988d50aa0c18441fce004338d9c"
+    },
+    {
+      "path": "tests/renderer.test.cjs",
+      "blob": "eac440ab2b6cea3dea418ed4a9abfb4af47f4f4f"
+    },
+    {
+      "path": "tests/settings.test.cjs",
+      "blob": "bf44c7f3e328c26a54ea2bf8524e230181058f05"
+    },
+    {
+      "path": "tests/walk.test.cjs",
+      "blob": "acbf6a63137ea71633c2f59cfcc83dc87604855b"
+    }
+  ]
+}

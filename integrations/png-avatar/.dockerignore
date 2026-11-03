@@ -1,0 +1,8 @@
+data
+avatar.token
+desktop.token
+desktop-data
+.env
+*.log
+*.mp4
+__pycache__
