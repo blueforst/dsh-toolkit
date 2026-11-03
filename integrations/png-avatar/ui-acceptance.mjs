@@ -5,11 +5,14 @@ import { createRequire } from 'node:module';
 import { setTimeout as sleep } from 'node:timers/promises';
 const authFile = process.env.DSH_AVATAR_TEST_AUTH_FILE;
 if (!authFile) throw new Error('需要受保护的界面验收凭据文件');
+// launch 失败也必须清理临时凭据。
+const cleanupAuth = () => { try { unlinkSync(authFile); } catch (error) { if (error.code !== 'ENOENT') throw error; } };
+process.once('exit', cleanupAuth);
 const auth = JSON.parse(readFileSync(authFile, 'utf8'));
 const output = process.env.DSH_AVATAR_TEST_OUTPUT || '/workspace/avatar-acceptance';
 mkdirSync(output, { recursive: true });
 const { chromium } = createRequire('/opt/dsh-camoufox/package.json')('playwright-core');
-const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
+const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const context = await browser.newContext({ locale: 'zh-CN', ignoreHTTPSErrors: true, viewport: { width: 1180, height: 1000 }, httpCredentials: { username: auth.username, password: auth.password } });
 const page = await context.newPage(), errors = [], observed = [];
 page.on('pageerror', error => errors.push(error.message));
@@ -24,22 +27,27 @@ try {
   const origin = new URL(auth.url).origin;
   assert.equal((await page.goto(origin + '/avatar/', { waitUntil: 'domcontentloaded' })).status(), 200);
   await page.waitForFunction(() => typeof ready !== 'undefined' && ready, null, { timeout: 15000 });
+  await page.waitForFunction(() => { const d=document.querySelector('#player')?.contentWindow?.__originalDiagnostics; return d?.assetsReady && d.flowReady; }, null, { timeout: 180000 });
+  const player = page.frames().find(f => f.url().includes('dsh-player.html'));
+  assert(player);
   assert.equal(await page.locator('#controls button').count(), 8);
   await page.getByRole('button', { name: '思考中', exact: true }).click();
-  await sleep(600);
-  assert.equal(await page.evaluate(() => lastFrame), 'actions-2.png');
-  await sleep(3600);
-  assert.equal(await page.evaluate(() => state.action), 'thinking');
-  assert.equal(await page.evaluate(() => lastFrame), 'actions-3.png', '思考动作结束后应保持托腮姿势');
+  await sleep(1800);
+  const original = await player.evaluate(() => ({ action: state.action, pose: lastPose, flowReady: flowRenderer.ready, nativeActions: Object.keys(PetMotion.clips).length }));
+  assert.equal(original.action, 'think');
+  assert.equal(original.pose.atlas, 'story-token');
+  assert.equal(original.pose.frame, 2);
+  assert(original.flowReady);
+  assert.equal(original.nativeActions, 38);
   await page.screenshot({ path: output + '/avatar-preview.png', fullPage: true });
   assert.equal((await context.request.get(origin + '/avatar/api/state')).status(), 200);
-  const report = { preview: true, preparedFrames: await page.evaluate(() => Object.keys(images).length), controls: 8, thinkingPoseHeld: true, realModelTest: false };
+  const report = { preview: true, nativeActions: original.nativeActions, controls: 8, originalRenderer: true, opticalFlow: true, realModelTest: false };
   if (await page.locator('#recording').isVisible()) {
     const partial = await context.request.get(origin + '/avatar/preview.mp4', { headers: { Range: 'bytes=0-31' } });
     assert.equal(partial.status(), 206);
     assert.equal((await partial.body()).length, 32);
     assert((await partial.body()).includes(Buffer.from('ftyp')));
-    await page.waitForFunction(() => document.querySelector('video').videoWidth === 1920, null, { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelector('video').videoWidth === 1280, null, { timeout: 15000 });
     report.recording = await page.locator('video').evaluate(video => ({ width: video.videoWidth, height: video.videoHeight, seconds: video.duration, rangeStatus: 206 }));
   }
   if (process.env.DSH_AVATAR_LIVE_MODEL_TEST === '1') {
@@ -66,6 +74,7 @@ try {
     report.realModelTest = true; report.thinkingAutomatic = true; report.agentInvokedActionTool = true; report.returnedToIdle = true;
     await page.goto(origin + '/avatar/', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => typeof ready !== 'undefined' && ready);
+    await page.waitForFunction(() => document.querySelector('#player')?.contentWindow?.__originalDiagnostics?.flowReady, null, { timeout: 180000 });
     await page.screenshot({ path: output + '/avatar-after-agent.png', fullPage: true });
   }
   assert.deepEqual(errors, []);
@@ -78,5 +87,5 @@ try {
 } finally {
   clearInterval(timer);
   await browser.close();
-  unlinkSync(authFile);
+  cleanupAuth();
 }

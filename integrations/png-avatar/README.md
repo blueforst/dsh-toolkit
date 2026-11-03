@@ -1,60 +1,57 @@
-# 大肥鱼：纯 2D 桌宠与直播角色
+# 大肥鱼：原版完整动画与 DSH 桌宠
 
-本配方复用 `YunYueSama/codex-deepseek-pet` 的完整角色图片。固定来源提交、校验 Git blob，离线提取 320 像素小图；运行时不调用图像模型，不使用 Electron、Live2D 骨骼或 WebGL。
+本配方完整复用 `YunYueSama/codex-deepseek-pet` 固定版本的运行文件与播放器，保留 38 个原生动作、整身运动场插值、动作过渡、转身、起步、刹车及步态与位移同步。不再使用手选少数姿势、缩小素材或 12 FPS 图片轮播。
 
-默认分工：
+## 组成与边界
 
-```text
-8 GB 机：DSH agent → 真实会话事件 → 私网角色服务
-        真实 Xfce 桌面 ← X11 桌宠播放器 ← 状态与预制图片
-        桌面采集（已包含桌宠）→ 私网原始视频
-4 GB 机：角色状态服务 + 按需视频编码 → 内网验收录像
-```
+- 8 GB 机：原版 Electron 43.7.6 程序和真实 Linux 桌面。`motion.js`、`flow.js`、`app.js`、行为、物理、步态模块均保持上游原始字节。
+- 4 GB 机：私网状态租约、受保护的原版文件服务，以及按需视频编码。
+- DSH 接入层：把真实会话事件交给原版行为仲裁器，保留会话占用、取消与失联恢复，不读取或传递思考正文。
+- Linux 适配层：更换宿主入口、关闭后台降频、允许软件 WebGL，并提供状态诊断。默认鼠标穿透。Windows 专用的前台窗口探测和窗口边缘探测未启用；这些接口不影响动画模块。
 
-桌宠平时眨眼，闲置 12 秒后沿桌面下方小范围走动；思考时托腮、略微歪头，播放一次后保持末帧，直到状态切换。思考、执行工具和回复期间停止自主走动。窗口使用 X11 Shape 的透明轮廓，输入区域为空，不抢焦点，鼠标直接穿透到后面的应用。它没有拖拽、换肤或养成功能。
+原版目标调度为 60 FPS。没有 GPU 的服务器通过 SwiftShader 执行同一运动场着色器，CPU 和内存成本显著高于旧图片播放器；实际帧率受其他任务争用影响。当前两核无 GPU 实机的走动采样约 28 次实际绘制/秒，侧车占整机约 88% CPU、工作集约 0.9 GiB，不能保证实时 60 FPS，详见[本次验收](../../docs/原版动画验收.md)。若运动场不能启用，宿主拒绝退回图片轮播，浏览器预览也会显示失败。
 
-## 会话状态与 agent 工具
+## 下载与完整性
 
-`provider.mjs` 接入 DSH `0.2.2-alpha.2` 的原生 Cordis 接口：
+`original/original-lock.json` 锁定提交 `7661c8b304c5400701f91da01b1a643a207331de` 的 170 个运行及测试文件，共 166,791,670 字节。导入器逐个验证 Git blob，保留原图尺寸和全部原版文件；不会把第三方图片、二进制或源码放入本项目发布包。
 
-| 真实事件 | 角色状态 |
-| --- | --- |
-| agent 进入 running、模型流开始 | 思考动作，包含等待模型输出的阶段 |
-| `reasoning-delta` | 思考动作 |
-| `text-delta` | 回复状态；没有配置 TTS 时不模拟语音或口型 |
-| `tool/call` | 执行工具，播放思考动作并停止走动 |
-| 回合结束、取消、agent 释放 | 回到待机 |
-
-不读取和转发模型思考正文，只传状态、会话标识和短期租约。同一状态的逐 token 事件不会逐次发送网络请求。15 秒心跳维持 35 秒租约；DSH 退出或失联后服务自动恢复待机。默认由第一个活跃根会话占用角色，其他并发会话和子会话不能抢占；也可在配置中指定 `sessionId`。
-
-agent 可调用：
-
-- `avatar_get_state`：查看当前动作和来源。
-- `avatar_set_action`：设置 `idle`、`thinking`、`wave`、`happy`、`sad`、`surprised`、`walk-left`、`walk-right`；`seconds` 为 0.25–30 秒，默认 3 秒。手动动作短暂覆盖自动动作，结束后恢复。
-
-## 在 4 GB 机部署角色服务
-
-将本目录复制到独立部署目录。以下构建与素材处理均在服务器执行：
+导入需要 Python 3 和 Node 20 以上。4 GB 机可直接执行：
 
 ```bash
-docker build -t local/dsh-png-avatar:0.1.0 .
 mkdir -p data
-sudo chown 1000:1000 data
-# 用自己的安全方式创建独立的随机 avatar.token，至少 32 字符。
-# 文件归属 1000:1000，权限 0640；不要提交凭据。
-docker run --rm --cpus 1 --memory 384m --user 1000:1000 \
-  -v "$PWD/data:/data" --entrypoint python3 \
-  local/dsh-png-avatar:0.1.0 /app/import-assets.py
+AVATAR_ORIGINAL_DIR="$PWD/data/original" python3 original/import-original.py
+sudo chown -R 1000:1000 data
+```
+
+`DSH-PROVENANCE.json` 是来源锁定记录，`DSH-CLIPS.json` 由原版模块直接导出。生成的 `dsh-index.html`、`dsh-player.html` 和 `dsh-webgl.js` 是适配入口，上游原始文件不被覆盖。
+
+## 启动状态服务
+
+本目录复制到独立部署目录后：
+
+```bash
+docker build -t local/dsh-png-avatar:0.2.0 .
+# 安全地创建至少 32 字符的独立随机 avatar.token；归属 1000:1000，权限 0640。
 AVATAR_BIND_IP=10.0.0.20 docker compose -p dsh-avatar up -d avatar
 ```
 
-将示例私网地址替换为实际地址。19380 是受独立 Bearer 凭据保护的角色接口；19381 为按需录像的私网媒体入口。不要把这两个端口绑定到公网。角色服务本身上限为 384 MiB / 0.5 核；编码器是独立的按需容器，不受这个 0.5 核配额限制。
+19380 为受 Bearer 凭据保护的接口，19381 为按需录像入口，仅绑定私网地址。服务上限 384 MiB / 0.5 核；编码器另设配额。不要将私网媒体入口绑定公网。
 
-素材导入会保留原作者的 `LICENSE`、`ASSET_LICENSE.md` 和改动署名。仓库不打包再分发角色图片，运行素材位于本机 `data/assets`。
+## 启动原版桌宠
 
-## 在 8 GB 机启动真实桌宠
+先按项目 Linux 桌面配方构建完整桌面镜像，再构建原版宿主：
 
-构建同一镜像，准备 `desktop-data/config.json`：
+```bash
+docker build -t local/dsh-original-avatar:0.2.0 original
+mkdir -p desktop-data
+sudo chown 1000:1000 desktop-data
+# 可在镜像内运行导入器，宿主无须安装 Node。
+docker run --rm --cpus 1 --memory 512m \
+  -v "$PWD/original:/recipe:ro" -v "$PWD/desktop-data:/data" \
+  --entrypoint python3 local/dsh-original-avatar:0.2.0 /recipe/import-original.py
+```
+
+准备 `desktop-data/config.json`，归属 1000:1000、权限 0600：
 
 ```json
 {
@@ -64,21 +61,19 @@ AVATAR_BIND_IP=10.0.0.20 docker compose -p dsh-avatar up -d avatar
 }
 ```
 
-`desktop.token` 使用与角色服务相同的独立凭据，归属 1000:1000、权限 0640；`desktop-data` 也需要允许 UID 1000 写入状态文件。然后运行：
+`desktop.token` 使用与状态服务相同的独立凭据，归属 1000:1000、权限 0640。然后执行：
 
 ```bash
 docker compose -f desktop.compose.yml -p dsh-desktop-pet up -d
 ```
 
-默认共享 `dsh-deepseek-harness-1` 的网络命名空间，通过 Linux 的本地抽象 X11 socket 访问同一个 `:99` 桌面。已验证的环境为 Linux / Xvfb 24 位色深；它不是适用于所有 Wayland、Xorg 或桌面环境的通用安装器。更换 DSH 容器名称时设置 `DSH_CONTAINER`，重新创建 DSH 容器后也应重新创建桌宠容器。
+默认连接 `dsh-deepseek-harness-1` 的 `:99` X11 桌面，原版文件只读挂载。更换 DSH 容器时设置 `DSH_CONTAINER`，重新创建 DSH 容器后也需重新创建桌宠。桌面需要启用合成器才能显示原版透明窗口。
 
-桌宠限制 0.3 核、160 MiB、12 FPS，不安装宿主机软件、不挂载 Docker socket。`desktop-data/desktop-pet.json` 提供实际窗口编号、位置、动作、鼠标穿透和焦点验证结果，便于验收。
+桌宠上限 2 核 / 2048 MiB，临时文件系统 512 MiB，目标 60 FPS，`desktop-data/status.json` 提供原版动作、插值状态、软件后端、绘制次数和窗口位置。健康检查要求素材和运动场都就绪。默认保留原版闲置行为和互动面板；可以用原版快捷键 `Ctrl+Alt+P` 切换鼠标穿透。
 
-## 接入 DSH
+## 接入 DSH 与预览
 
-将 `provider.mjs` 和 `events.mjs` 放入 DSH 可持久化的集成目录，复用当前 DSH 安装的 `@deepseek-ai/dsh-tools` 依赖。专用 Linux 桌面运行时可把该目录的 `node_modules` 链接到 `/opt/dsh-camoufox/node_modules`。
-
-在 DSH 数据目录中放置权限 0600 的 `avatar/config.json`：
+将 `provider.mjs`、`events.mjs`、`actions.json` 放入持久化集成目录，复用当前 DSH 的 `@deepseek-ai/dsh-tools`。在 DSH 数据目录中准备权限 0600 的 `avatar/config.json` 和 token：
 
 ```json
 {
@@ -87,41 +82,35 @@ docker compose -f desktop.compose.yml -p dsh-desktop-pet up -d
 }
 ```
 
-对应 token 文件同样为 0600。将 `web.cordis.patch.yml` 合并到现有 profile，或作为额外 `--patch` 加载，二者选其一。保留现有配置并先备份，重启后确认工具发现和服务健康。
+备份现有配置后，合并 `web.cordis.patch.yml`，再重启 DSH。`avatar_set_action` 可调用全部 38 个原生动作；兼容 `thinking`、`surprised`、`walk-left`、`walk-right` 别名。持续时间为 0.25–30 秒。有限动作仍按原版时序播放，不因指定了较长时间而被拉伸。
 
-预览地址是当前 DSH 网站的 `/avatar/`，继承 DSH 登录与来源检查。浏览器不接触私网角色控制密钥；代理只开放必要的页面、状态、预制图片和验收录像，不代理原始 RGBA 流。
+会话 running、模型等待和 reasoning 事件触发原版 `think`；工具执行期间继续思考，正文输出转为待机姿态并停止自主走动；结束、取消和失联回到原版闲置行为。默认第一个活跃根会话占用角色，其他根会话和子会话不会抢占。15 秒心跳维持 35 秒租约。
 
-## 内网录制与验证
+当前 DSH 网站的 `/avatar/` 沿用登录和来源检查，浏览器不接触角色控制密钥。预览直接使用原版 `motion/flow/app` 和全部所需素材，首次加载约 160 MiB；之后原版资源可在浏览器私有缓存中复用。服务只开放来源锁定清单中的资源，不提供任意文件路径。
 
-接收端先执行：
+## 验证与视频
 
-```bash
-AVATAR_CAPTURE_SECONDS=30 docker compose --profile capture -p dsh-avatar run --rm encoder
-```
-
-再在 8 GB 机的桌面容器中运行 `capture-desktop.sh`，指定 `AVATAR_RECEIVER` 为接收端私网 IPv4。脚本按默认 1440×900 桌面采集，完整缩放并留边到 1920×1080 / 30 FPS。接收端以 x264 veryfast / 6 Mbps 编码。
-
-默认桌面已包含真实桌宠，编码端不重复叠加。只有未运行桌宠、确实需要固定的直播画面叠加时才设置 `AVATAR_OVERLAY=1`。当前验收采集使用静音轨道，没有配置桌面音频采集、TTS、直播平台地址或推流密钥；录像不等于已在平台开播。
-
-角色与编码器运行日志、CPU、内存、完整帧数及停止后的进程都需核对。检查在服务器执行：
+所有构建、测试、素材处理和编码在服务器执行：
 
 ```bash
-npm run build
 npm run check
 DSH_ENTRYPOINT=/path/to/dsh/lib/bin.js npm test
 python3 scripts/audit-release.py
-# DSH 运行时内：原生工具与事件总线隔离验收，无模型请求。
 DSH_AVATAR_ISOLATED_TEST=1 node integrations/png-avatar/acceptance.mjs
+# 原版测试使用原版依赖路径。
+NODE_PATH=/opt/avatar-electron/node_modules node --test /original/tests/*.test.cjs
 ```
 
-`ui-acceptance.mjs` 使用受保护的临时凭据文件检查真实页面；只有显式设置 `DSH_AVATAR_LIVE_MODEL_TEST=1` 才发送一条真实模型测试消息。凭据不写日志，脚本结束后删除临时文件。
+`ui-acceptance.mjs` 验证原版播放器与运动场；只有显式设置 `DSH_AVATAR_LIVE_MODEL_TEST=1` 才发送一条真实模型验收请求。临时凭据文件在结束后删除。
 
-## 停用和回滚
+`original/render-original.cjs` 在隔离 Electron 的 `AVATAR_RENDER_MODE=1` 下，控制时钟逐帧执行原版主程序与原版 `draw`，输出 60 FPS 视频。没有用重复帧假装提高动画帧率；没有修改帧序、持续时间、原版运动场或物理算法。此模式的专用 IPC 和调试端口只用于隔离验收，不向公网开放。
 
-停止桌宠不会停止 DSH：`docker compose -f desktop.compose.yml -p dsh-desktop-pet down`。停止角色服务：`docker compose -p dsh-avatar down`。移除新增 profile 行或恢复备份并重启 DSH，即可撤销工具和自动联动。不要删除原有会话、浏览器数据或其他 profile。
+双机直播负载的录像配方仍为接收端先执行 `AVATAR_CAPTURE_SECONDS=30 docker compose --profile capture -p dsh-avatar run --rm encoder`，再在桌面容器内运行 `capture-desktop.sh`。采集真实桌面已包含原版角色，编码端不叠加另一套播放器。此配方默认 1080p30，是传输验收配置；原版桌面调度与离线动作视频为 60 FPS。没有配置 TTS、桌面声音或 B 站/抖音推流。
 
-## 素材来源
+## 停用、回滚和来源
 
-作者：YunYueSama；原仓库：<https://github.com/YunYueSama/codex-deepseek-pet>。本配方锁定提交 `7661c8b304c5400701f91da01b1a643a207331de`，提取、缩小部分整身帧，增加走路镜像，选用托腮、歪头姿势并保持思考末帧。
+停止桌宠：`docker compose -f desktop.compose.yml -p dsh-desktop-pet down`；停止状态服务：`docker compose -p dsh-avatar down`。撤销 DSH 接入可移除新增 profile 行或恢复已核对的备份，再重启 DSH。保留会话与浏览器数据。
 
-原作者对其有权授权的新增贡献采用自定义署名许可，允许署名使用和商用；社区参考图、角色设计等第三方权利不因此额外授予。实际使用须保留随素材下载的完整声明。本配方代码使用项目现有 MIT 许可。
+从旧版升级前，备份旧 compose、代码及镜像标签；不要在验收完成前删除旧素材目录。旧图片播放器已从源码配方移除，不作为新版本的静默降级路径。
+
+原作者：YunYueSama；原项目：[codex-deepseek-pet](https://github.com/YunYueSama/codex-deepseek-pet)。完整许可和素材权利说明随导入保留。作者对其有权授权的新增贡献采用自定义署名许可；该许可不额外授予底层社区参考等第三方权利。本项目适配代码沿用 MIT 许可。

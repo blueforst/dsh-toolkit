@@ -1,20 +1,30 @@
 services:
   desktop-pet:
-    build: .
-    image: local/dsh-png-avatar:0.1.0
+    build: ./original
+    image: local/dsh-original-avatar:0.2.0
     network_mode: container:${DSH_CONTAINER:-dsh-deepseek-harness-1}
     user: "1000:1000"
-    entrypoint: [python3, /app/desktop-pet.py]
     environment:
       DISPLAY: :99
     volumes:
       - ./desktop-data:/data
+      - ${AVATAR_ORIGINAL_DIR:-./desktop-data/original}:/original:ro
       - ./desktop.token:/run/secrets/avatar_token:ro
+      - ./original/native-main.cjs:/opt/avatar-bridge/native-main.cjs:ro
     restart: unless-stopped
-    cpus: 0.3
-    mem_limit: 160m
-    memswap_limit: 160m
-    pids_limit: 32
+    cpus: 2.0
+    cpu_shares: 128
+    mem_limit: 2048m
+    memswap_limit: 2048m
+    shm_size: 256m
+    pids_limit: 256
     read_only: true
+    tmpfs: ["/tmp:size=512m,mode=1777"]
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
+    healthcheck:
+      test: [CMD, node, -e, "const s=JSON.parse(require('fs').readFileSync('/data/status.json'));if(!s.assetsReady||!s.flowReady||Date.now()-s.updatedAt>10000)process.exit(1)"]
+      start_period: 90s
+      interval: 20s
+      timeout: 3s
+      retries: 3

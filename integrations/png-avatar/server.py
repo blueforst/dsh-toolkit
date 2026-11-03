@@ -1,28 +1,29 @@
-"""私网角色服务：播放预制小图片，不运行图像模型或骨骼引擎。"""
+"""私网角色服务：提供原版运行文件与短期状态租约；不重写动画或运动场。"""
 import hmac
 import json
 import math
+import mimetypes
 import os
 from pathlib import Path
 import re
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlsplit
-
-from PIL import Image
+from urllib.parse import urlsplit, unquote
 
 DATA = Path(os.environ.get('AVATAR_DATA', '/data'))
-ASSETS = DATA / 'assets'
-MANIFEST = json.loads((ASSETS / 'manifest.json').read_text())
+ORIGINAL = DATA / 'original'
+META = json.loads((ORIGINAL / 'DSH-CLIPS.json').read_text())
+PROVENANCE = json.loads((ORIGINAL / 'DSH-PROVENANCE.json').read_text())
+ALIASES = {'thinking': 'think', 'surprised': 'surprise', 'walk-left': 'left', 'walk-right': 'right'}
+ACTIONS = {name: {**META['clips'][name], 'native': name} for name in META['actions']}
+ACTIONS.update({alias: {**META['clips'][name], 'native': name} for alias, name in ALIASES.items()})
+MANIFEST = {**META, 'author': PROVENANCE['author'], 'nativeActions': META['actions'], 'actions': ACTIONS, 'originalFiles': len(PROVENANCE['files'])}
+PUBLIC_FILES = {item['path'] for item in PROVENANCE['files'] if item['path'].startswith(('assets/', 'src/renderer/', 'build/'))}
+PUBLIC_FILES.update({'src/renderer/dsh-index.html', 'src/renderer/dsh-player.html', 'src/renderer/dsh-webgl.js'})
 TOKEN = Path(os.environ.get('AVATAR_TOKEN_FILE', '/run/secrets/avatar_token')).read_text().strip()
 if len(TOKEN) < 32:
     raise RuntimeError('角色服务需要至少 32 字符的独立控制凭据')
-PNG = {name: (ASSETS / name).read_bytes() for clip in MANIFEST['actions'].values() for name in clip['files']}
-RGBA = {}
-for name in PNG:
-    with Image.open(ASSETS / name) as image:
-        RGBA[name] = image.convert('RGBA').tobytes()
 LOCK = threading.Lock()
 AUTO = {'action': 'idle', 'phase': 'idle', 'source': 'auto', 'sessionId': None, 'expires': 0, 'startedAt': time.time() * 1000}
 MANUAL = None
@@ -66,21 +67,6 @@ def set_action(body):
     return current()
 
 
-def frame_name(state=None):
-    state = state or current()
-    clip = MANIFEST['actions'][state['action']]
-    elapsed = max(0, time.time() * 1000 - state['startedAt'])
-    duration = sum(clip['times'])
-    if clip['loop']:
-        elapsed %= duration
-    elif elapsed >= duration:
-        return clip['files'][-1] if clip.get('hold') else MANIFEST['actions']['idle']['files'][0]
-    for name, ms in zip(clip['files'], clip['times']):
-        if elapsed < ms:
-            return name
-        elapsed -= ms
-    return clip['files'][-1]
-
 
 class Handler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -109,35 +95,34 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
         if path == '/health':
-            return self.send(200, {'ready': True, 'frames': len(PNG), 'size': MANIFEST['size']})
-        # 原始透明帧仅供同容器的 FFmpeg 使用；不通过 DSH 预览代理暴露。
-        if path == '/overlay.rgba' and self.client_address[0] == '127.0.0.1':
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/octet-stream')
-            self.send_header('Connection', 'close')
-            self.end_headers()
-            self.close_connection = True
-            deadline = time.monotonic()
-            try:
-                while True:
-                    self.wfile.write(RGBA[frame_name()])
-                    self.wfile.flush()
-                    deadline += 1 / 12
-                    time.sleep(max(0, deadline - time.monotonic()))
-            except (BrokenPipeError, ConnectionResetError):
-                return
+            return self.send(200, {'ready': True, 'renderer': 'original', 'actions': len(META['actions']), 'originalFiles': len(PROVENANCE['files'])})
         if not self.admitted():
             return self.send(401, {'error': '需要角色服务凭据'})
         if path == '/':
-            return self.send(200, Path(__file__).with_name('stage.html').read_bytes(), 'text/html; charset=utf-8')
+            return self.send(200, Path(__file__).with_name('stage-original.html').read_bytes(), 'text/html; charset=utf-8')
         if path == '/manifest.json':
             return self.send(200, MANIFEST)
         if path == '/api/state':
             return self.send(200, current())
-        if path == '/frame.png':
-            return self.send(200, PNG[frame_name()], 'image/png')
-        if path.startswith('/assets/') and path.removeprefix('/assets/') in PNG:
-            return self.send(200, PNG[path.removeprefix('/assets/')], 'image/png', Cache_Control='private, max-age=86400')
+        if path == '/preview-bridge.js':
+            return self.send(200, Path(__file__).with_name('preview-bridge.js').read_bytes(), 'text/javascript; charset=utf-8')
+        if path.startswith('/original/'):
+            relative = unquote(path[len('/original/'):])
+            if relative not in PUBLIC_FILES:
+                return self.send(404, {'error': '没有此原版资源'})
+            file = ORIGINAL / relative
+            content_type = mimetypes.guess_type(file.name)[0] or 'application/octet-stream'
+            self.send_response(200)
+            self.send_header('Content-Type', content_type)
+            self.send_header('Content-Length', str(file.stat().st_size))
+            self.send_header('Cache-Control', 'private, max-age=86400')
+            self.send_header('X-Content-Type-Options', 'nosniff')
+            self.end_headers()
+            if self.command != 'HEAD':
+                with file.open('rb') as stream:
+                    while chunk := stream.read(65536):
+                        self.wfile.write(chunk)
+            return
         if path == '/preview.mp4' and (DATA / 'preview.mp4').exists():
             file = DATA / 'preview.mp4'
             size = file.stat().st_size
@@ -190,5 +175,5 @@ class Handler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     server = ThreadingHTTPServer((os.environ.get('AVATAR_HOST', '0.0.0.0'), int(os.environ.get('AVATAR_PORT', '19380'))), Handler)
     server.daemon_threads = True
-    print(json.dumps({'ready': True, 'frames': len(PNG), 'commit': MANIFEST['commit']}), flush=True)
+    print(json.dumps({'ready': True, 'renderer': 'original', 'actions': len(META['actions']), 'commit': META['commit']}), flush=True)
     server.serve_forever()

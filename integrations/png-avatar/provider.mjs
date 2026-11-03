@@ -4,10 +4,10 @@ import { isIP } from 'node:net';
 import { Readable } from 'node:stream';
 import { defineTool } from '@deepseek-ai/dsh-tools';
 import { AvatarEvents } from './events.mjs';
+import actions from './actions.json' with { type: 'json' };
 
 export const name = 'png-avatar';
 export const inject = ['agents', 'sessions', 'tools', 'webServer', 'connection'];
-const actions = ['idle', 'thinking', 'wave', 'happy', 'sad', 'surprised', 'walk-left', 'walk-right'];
 
 export function apply(ctx, config = {}) {
   const file = config.configFile || process.env.DSH_AVATAR_CONFIG || `${process.env.DSH_HOME || `${homedir()}/.dsh`}/avatar/config.json`;
@@ -55,7 +55,7 @@ export function apply(ctx, config = {}) {
     name: 'avatar_set_action',
     description: '切换直播角色的表情或动作。DSH 思考状态自动联动，无需用工具模拟思考。手动动作持续数秒后恢复自动状态。',
     parameters: {
-      action: { type: 'string', required: true, enum: actions, description: 'idle 待机；thinking 思考；wave 挥手；happy 开心；sad 难过；surprised 惊讶；walk-left 向左走；walk-right 向右走。' },
+      action: { type: 'string', required: true, enum: actions, description: '原版完整动作。thinking 思考；wave 挥手；happy 开心；sad 难过；surprised 惊讶；walk-left/right 走动；dance 跳舞；jump 跳跃；eat 吃东西；sleep 入睡；wake 醒来；hum 哼歌；token-game 小游戏；其余名称对应原版动作。' },
       seconds: { type: 'number', description: '持续秒数，0.25–30，默认 3。' },
     },
     output: { schema: { type: 'object', additionalProperties: true }, render: (_args, value) => [{ type: 'text', text: JSON.stringify(value) }] },
@@ -80,7 +80,7 @@ export function apply(ctx, config = {}) {
       const incoming = new URL(req.url, 'http://localhost');
       if (incoming.pathname === '/avatar') { res.writeHead(302, { Location: '/avatar/' }); return res.end(); }
       const path = incoming.pathname.slice('/avatar'.length);
-      const allowed = ['/', '/manifest.json', '/api/state', '/api/action', '/frame.png', '/preview.mp4'].includes(path) || /^\/assets\/[a-z0-9-]+\.png$/.test(path);
+      const allowed = ['/', '/manifest.json', '/api/state', '/api/action', '/preview-bridge.js', '/preview.mp4'].includes(path) || /^\/original\/(assets|src\/renderer|build)\/[\w.\/%-]+$/.test(path);
       if (!allowed || !['GET', 'HEAD', 'POST'].includes(req.method) || (req.method === 'POST' && path !== '/api/action')) { res.writeHead(404); return res.end(); }
       if (req.method === 'POST' && req.headers.origin && new URL(req.headers.origin).host !== req.headers.host) { res.writeHead(403); return res.end(); }
       try {
@@ -96,7 +96,7 @@ export function apply(ctx, config = {}) {
           Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}),
           ...(req.headers.range ? { Range: req.headers.range } : {}),
         }, body, signal: AbortSignal.any([abort.signal, AbortSignal.timeout(15000)]), redirect: 'error' });
-        const headers = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' };
+        const headers = { 'Cache-Control': path.startsWith('/original/') ? 'private, max-age=86400' : 'no-store', 'X-Content-Type-Options': 'nosniff' };
         for (const key of ['content-type', 'content-length', 'content-range', 'accept-ranges']) if (response.headers.has(key)) headers[key] = response.headers.get(key);
         res.writeHead(response.status, headers);
         if (!response.body || req.method === 'HEAD') return res.end();

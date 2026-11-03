@@ -1,4 +1,4 @@
-"""按需录制内网真实桌面与角色叠加；不向外部平台发送数据。"""
+"""按需录制内网真实桌面，保留原版角色画面；不向外部平台发送数据。"""
 import os
 import subprocess
 
@@ -7,14 +7,7 @@ if not 1 <= duration <= 300:
     raise SystemExit('内网验收录像限制在 1–300 秒')
 command = ['ffmpeg', '-hide_banner', '-nostdin', '-loglevel', 'warning', '-threads', '2',
     '-thread_queue_size', '4', '-analyzeduration', '100000', '-probesize', '65536', '-f', 'nut', '-i', 'tcp://0.0.0.0:19381?listen=1&listen_timeout=20000']
-if os.environ.get('AVATAR_OVERLAY', '0') == '1':
-    command += [
-    '-thread_queue_size', '2', '-f', 'rawvideo', '-pixel_format', 'rgba', '-video_size', '320x320', '-framerate', '12',
-    '-i', 'http://127.0.0.1:19380/overlay.rgba',
-    '-filter_complex_threads', '1', '-filter_complex', '[1:v]format=yuva420p[pet];[0:v][pet]overlay=W-w-24:H-h-24:shortest=1:format=yuv420[v]',
-    '-map', '[v]']
-else:
-    command += ['-map', '0:v:0']
+command += ['-map', '0:v:0']
 command += ['-map', '0:a?', '-c:v', 'libx264', '-preset', 'veryfast', '-tune', 'zerolatency', '-threads', '2',
     '-b:v', '6000k', '-minrate', '6000k', '-maxrate', '6000k', '-bufsize', '12000k', '-g', '60', '-sc_threshold', '0',
     '-x264-params', 'nal-hrd=cbr:force-cfr=1', '-c:a', 'aac', '-b:a', '128k', '-t', str(duration),

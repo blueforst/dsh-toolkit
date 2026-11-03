@@ -47,7 +47,7 @@ try {
   await expect('idle');
   ctx.emit('agent/status', { agent, status: 'idle' });
   await expect('idle');
-  const image = await fetch(origin + '/avatar/frame.png', { headers });
+  const image = await fetch(origin + '/avatar/original/assets/whale/idle-front.png', { headers });
   assert.equal(image.headers.get('content-type'), 'image/png');
   assert((await image.arrayBuffer()).byteLength > 1000);
   console.log(JSON.stringify({ nativeToolExecution: true, nativeEventBus: true, thinkingAndReply: true, cancelledToIdle: true, thoughtTextNotForwarded: true, authenticatedPreview: true, csrfRejected: true, rawOverlayNotProxied: true, externalModelRequests: 0 }));

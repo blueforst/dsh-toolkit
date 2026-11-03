@@ -1,0 +1,6 @@
+original/
+data/
+*-data/
+*.token
+*.tgz
+*.log

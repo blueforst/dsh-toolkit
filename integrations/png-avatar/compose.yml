@@ -1,7 +1,7 @@
 services:
   avatar:
     build: .
-    image: local/dsh-png-avatar:0.1.0
+    image: local/dsh-png-avatar:0.2.0
     restart: unless-stopped
     user: "1000:1000"
     ports:
@@ -27,13 +27,12 @@ services:
       retries: 3
   encoder:
     profiles: [capture]
-    image: local/dsh-png-avatar:0.1.0
+    image: local/dsh-png-avatar:0.2.0
     network_mode: service:avatar
     user: "1000:1000"
     entrypoint: [python3, /app/render.py]
     environment:
       AVATAR_CAPTURE_SECONDS: ${AVATAR_CAPTURE_SECONDS:-30}
-      AVATAR_OVERLAY: ${AVATAR_OVERLAY:-0}
     volumes:
       - ./data:/data
     cpus: 1.8
