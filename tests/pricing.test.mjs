@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { loadRuntime } from '../plugins/session-billing/runtime.js';
-import { createProjection } from '../plugins/session-billing/projection.js';
+import { loadRuntime } from '../vendor/dsh-toolkit-local/plugins/session-billing/runtime.js';
+import { createProjection } from '../vendor/dsh-toolkit-local/plugins/session-billing/projection.js';
 
 const entrypoint = process.env.DSH_ENTRYPOINT;
 const close = (a, b) => assert(Math.abs(a - b) < 1e-12, `${a} != ${b}`);

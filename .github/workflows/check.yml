@@ -1,21 +1,48 @@
-name: 插件检查
+name: 服务器插件检查
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: server
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-node@v7.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version: '24'
+          path: server
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.22.1'
+      - name: 验证快照并读取固定提交
+        id: source
+        run: |
+          node scripts/sync-local.mjs --check
+          node -p "'commit=' + require('./vendor/dsh-toolkit-local.source.json').commit" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: blueforst/dsh-toolkit-local
+          ref: ${{ steps.source.outputs.commit }}
+          path: local-source
+      - name: 核对快照与源提交逐字一致
+        run: node scripts/sync-local.mjs --check --source ../local-source
       - name: 安装已验证版本的 DSH 测试运行时
-        run: npm install --global @deepseek-ai/dsh@0.2.2-alpha.2 --ignore-scripts --no-audit --no-fund
+        run: npm install --prefix "$RUNNER_TEMP/dsh-sdk" @deepseek-ai/dsh@0.2.2-alpha.2 --ignore-scripts --no-audit --no-fund
       - name: 构建、检查和测试
+        env:
+          DSH_ENTRYPOINT: ${{ runner.temp }}/dsh-sdk/node_modules/@deepseek-ai/dsh/lib/bin.js
         run: |
           npm run build
           npm run check
-          DSH_ENTRYPOINT="$(npm root -g)/@deepseek-ai/dsh/lib/bin.js" npm test
+          npm test
           python3 scripts/audit-release.py
-          npm pack --pack-destination /tmp
+          git diff --exit-code -- client.js
+          mkdir -p dist
+          npm pack --pack-destination dist
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dsh-toolkit-server-0.2.0
+          path: server/dist/*.tgz
+          if-no-files-found: error

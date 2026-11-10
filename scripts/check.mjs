@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { checkSnapshot } from './sync-local.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 let checked = 0;
@@ -21,4 +22,5 @@ function walk(directory) {
   }
 }
 walk(root);
+checkSnapshot();
 console.log(`语法与 JSON 检查通过：${checked} 个 JavaScript 文件。`);

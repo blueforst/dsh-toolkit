@@ -2,6 +2,8 @@
 
 本仓库自编部分包括 DSH 客户端扩展、资源采样与代理、Pi 费用投影、Camoufox 接入桥及安装与检查脚本，按 MIT 授权。
 
+0.2.0 起，Go 月额度和 Pi 会话费用的唯一维护源是 [blueforst/dsh-toolkit-local](https://github.com/blueforst/dsh-toolkit-local)。`vendor/dsh-toolkit-local` 是带提交号及逐文件 SHA256 的生成快照，不作手工修改；保留其 MIT LICENSE 和 NOTICE。来源锁定见 `vendor/dsh-toolkit-local.source.json`。
+
 以下第三方项目通过公开依赖、镜像或下载地址使用，二进制和第三方核心源码不随本仓库发布；各自授权仍适用：
 
 - [DeepSeek Harness Docker](https://github.com/runzhliu/deepseek-harness-docker)：基础镜像与 `@runzhliu/dsh-browser-desktop`；浏览器桌面入口属于上游插件，本仓库提供 Camoufox 接入。

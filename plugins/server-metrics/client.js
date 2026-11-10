@@ -60,29 +60,15 @@ window.__ModuleLoader__.load({
         detail ? h('div', { style: { marginTop: '4px', fontSize: '11px', lineHeight: '14px', opacity: .55, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' } }, stale ? '等待更新' : detail) : null);
     }
 
-    function MetricsSection({ wide, kind, stale, children }) {
-      const rootRef = React.useRef(null);
-      React.useLayoutEffect(() => {
-        if (!wide || !rootRef.current || kind !== 'resources') return;
-        let container = rootRef.current.parentElement;
-        while (container && getComputedStyle(container).display === 'contents') container = container.parentElement;
-        if (!container) return;
-        const previous = container.style.getPropertyValue('flex-wrap');
-        const priority = container.style.getPropertyPriority('flex-wrap');
-        container.style.setProperty('flex-wrap', 'wrap');
-        return () => {
-          if (container.style.getPropertyValue('flex-wrap') !== 'wrap') return;
-          if (previous) container.style.setProperty('flex-wrap', previous, priority);
-          else container.style.removeProperty('flex-wrap');
-        };
-      }, [wide, kind]);
+    function MetricsSection({ wide, stale, children }) {
+      // The bundled common quota section owns the shared footer's wrapping.
+      // Keep a single owner so unmounting cannot restore another effect's value.
       if (!wide) return null;
       return h('div', {
-        ref: rootRef,
-        [kind === 'resources' ? 'data-dsh-server-metrics' : 'data-dsh-opencode-go-quota']: 'true',
+        'data-dsh-server-metrics': 'true',
         'data-placement': 'sidebar', 'data-state': stale ? 'unavailable' : 'ready',
-        'aria-label': kind === 'resources' ? '服务器资源' : 'OpenCode Go 月额度',
-        title: stale ? '数据暂不可用' : kind === 'resources' ? '服务器整机资源，每 1 秒更新' : 'OpenCode Go 官方本月已用额度，每 60 秒刷新',
+        'aria-label': '服务器资源',
+        title: stale ? '数据暂不可用' : '服务器整机资源，每 1 秒更新',
         style: {
           boxSizing: 'border-box', width: '100%', flex: '0 0 100%', padding: '10px 12px 12px', marginBottom: '4px',
           display: 'flex', flexDirection: 'column', gap: '11px', color: 'var(--dsw-alias-label-primary,#172033)',
@@ -93,7 +79,7 @@ window.__ModuleLoader__.load({
 
     function ServerMetrics({ wide }) {
       const { sample, stale } = useSample(wide, '/server-metrics', 'host');
-      return h(MetricsSection, { wide, kind: 'resources', stale }, [
+      return h(MetricsSection, { wide, stale }, [
         { label: 'CPU', data: sample?.cpu }, { label: '内存', data: sample?.memory }, { label: '硬盘', data: sample?.disk },
       ].map(({ label, data }, index) => h(MetricBar, {
         key: label, label, value: data?.percent, stale, ariaLabel: `服务器${label}使用率`,
@@ -102,18 +88,8 @@ window.__ModuleLoader__.load({
       })));
     }
 
-    function OpenCodeQuota({ wide }) {
-      const { sample, stale } = useSample(wide, '/opencode-go-quota', 'opencode-go-monthly', 60000);
-      const monthly = sample?.monthly;
-      return h(MetricsSection, { wide, kind: 'quota', stale }, h(MetricBar, {
-        label: 'OpenCode Go', value: monthly?.percent, stale, ariaLabel: 'OpenCode Go 本月已用额度',
-        detail: '本月已使用', precision: 0,
-      }));
-    }
-
     function apply(ctx) {
       ctx.slots.inject('sidebar.footer.action', () => ctx.slots.register({ name: 'sidebar.footer.action', id: 'server-metrics', order: 49, label: '服务器资源' }, ServerMetrics));
-      ctx.slots.inject('sidebar.footer.action', () => ctx.slots.register({ name: 'sidebar.footer.action', id: 'opencode-go-quota', order: 51, label: 'OpenCode Go 月额度' }, OpenCodeQuota));
     }
     return { apply, inject: ['slots'] };
   },

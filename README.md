@@ -1,6 +1,10 @@
-# DSH Toolkit
+# DSH Toolkit · Linux 服务器版
 
-把经过实际部署的 DSH 定制整理成一个可复用插件包：**服务器资源、OpenCode Go 月额度、Pi 会话费用**。另附 **Camoufox 指纹浏览器运行时**、**Linux 完整桌面与 Computer Use**及 **OpenCode Go 模型配置示例**。
+面向 Linux 服务器的 DSH 插件包：**服务器资源、OpenCode Go 月额度、Pi 会话费用**。另附 **Camoufox 指纹浏览器运行时**、**Linux 完整桌面与 Computer Use**及 **OpenCode Go 模型配置示例**。
+
+从 **0.2.0** 起，本机通用功能已分离到 [dsh-toolkit-local](https://github.com/blueforst/dsh-toolkit-local)。个人电脑只需要额度与费用增强时，安装本机版即可；浏览器和 CUA 使用 DSH 原生能力。
+
+本仓库保留服务器资源监控和部署配方，额度及费用从本机仓库的固定提交生成 `vendor` 快照，随服务器成品打包。两边只维护一份通用实现，服务器用户仍只需安装一个包。不要在同一 profile 同时安装服务器版和本机版。维护方式见 [拆分与版本复用](docs/拆分与版本复用.md)。
 
 源码与版本包：[blueforst/dsh-toolkit](https://github.com/blueforst/dsh-toolkit) · [下载发布包](https://github.com/blueforst/dsh-toolkit/releases)
 
@@ -32,15 +36,13 @@ Linux 桌面新增配方及真实截图坐标验收见 [桌面说明](integratio
 
 ## 安装一个插件包
 
-在运行 DSH 的环境中执行：
+0.2.0 的安装包由本仓库 [Actions](https://github.com/blueforst/dsh-toolkit/actions) 成功检查运行的 `dsh-toolkit-server-0.2.0` 构建产物提供。下载并解压后，在运行 DSH 的环境中执行：
 
 ```bash
-curl -fL -o forst-dsh-toolkit-0.1.1.tgz \
-  https://github.com/blueforst/dsh-toolkit/releases/download/v0.1.1/forst-dsh-toolkit-0.1.1.tgz
-dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.1.1.tgz"
+dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.2.0.tgz"
 ```
 
-随后重启运行该 `web` profile 的 DSH 进程。保留下载包的位置，便于后续重新安装。
+随后重启运行该 `web` profile 的 DSH 进程。保留下载包的位置，便于后续重新安装。本次代码拆分不会自动升级现有服务器；旧 Release 与部署镜像继续可用。集成目录中的原部署配方保持原版本基线，使用新版包时需明确替换安装命令中的包路径。
 
 如果原来分别装了 `@forst/dsh-server-metrics` 或 `@forst/dsh-session-billing`，先备份 profile 的 `package.json`、`pnpm-lock.yaml`、`cordis.yml`、`cordis.patch.yml`，移除旧插件后再安装统一包：
 
