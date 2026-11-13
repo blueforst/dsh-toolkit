@@ -6,8 +6,8 @@
     "sha256": "120cd7f40340c5e012422aca393932767e228c224dd8b9df2124ca29c5e48226"
   },
   "provider": {
-    "version": "0.2.2-alpha.2",
-    "url": "https://registry.npmjs.org/@deepseek-ai/dsh-experimental-computer-use-cua-driver-mcp/-/dsh-experimental-computer-use-cua-driver-mcp-0.2.2-alpha.2.tgz",
-    "integrity": "sha512-zmLid+/afOJymAtheOqQYaMJWgk7269L2RQ8icyVkEfclIGyLMI8J+NBTpd1tNjkq3PJ/XRcbQIYVEL7H4u7Wg=="
+    "version": "0.2.2-rc.2",
+    "url": "https://registry.npmjs.org/@deepseek-ai/dsh-experimental-computer-use-cua-driver-mcp/-/dsh-experimental-computer-use-cua-driver-mcp-0.2.2-rc.2.tgz",
+    "integrity": "sha512-z/Hgn/2cT0bxQdb1q56D4uBV9UPqD/DT6CqN5vTXRNx8a094lUy2HTHcM3lwC20wWOUKmAIaGaQr5PWHWNcBDw=="
   }
 }

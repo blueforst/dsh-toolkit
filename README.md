@@ -28,7 +28,7 @@ Linux 桌面新增配方及真实截图坐标验收见 [桌面说明](integratio
 
 ## 兼容环境
 
-- 已验证基线：DSH `0.2.2-alpha.2`、Node.js `24.22.1`、Pi `1.4.0`；Node 最低 `24.9`。
+- DSH 运行时与 CI 基线均为 `0.2.2-rc.2`，Node.js 最低 `24.9`。容器验收环境为 Node.js `24.22.3` 和 DSH 自带的 Pi `1.5.2`。
 - 资源采集器适用于有 `/proc` 的 Linux；内存按整机 `MemAvailable` 计算。
 - Web UI 使用原生 Cordis、会话投影和客户端扩展点。其他 DSH 版本需要重新验证。
 - 浏览器运行时版本、来源和限制见 [Camoufox 说明](integrations/camoufox/README.md)。
@@ -36,13 +36,13 @@ Linux 桌面新增配方及真实截图坐标验收见 [桌面说明](integratio
 
 ## 安装一个插件包
 
-0.2.1 的安装包由本仓库 [Actions](https://github.com/blueforst/dsh-toolkit/actions) 成功检查运行的 `dsh-toolkit-server-0.2.1` 构建产物提供。下载并解压后，在运行 DSH 的环境中执行：
+0.2.2 的安装包由本仓库 [Actions](https://github.com/blueforst/dsh-toolkit/actions) 成功检查运行的 `dsh-toolkit-server-0.2.2` 构建产物提供。下载并解压后，在运行 DSH 的环境中执行：
 
 ```bash
-dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.2.1.tgz"
+dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.2.2.tgz"
 ```
 
-随后重启运行该 `web` profile 的 DSH 进程。保留下载包的位置，便于后续重新安装。本次代码拆分不会自动升级现有服务器；旧 Release 与部署镜像继续可用。集成目录中的原部署配方保持原版本基线，使用新版包时需明确替换安装命令中的包路径。
+随后重启运行该 `web` profile 的 DSH 进程。保留下载包的位置，便于后续重新安装。从旧版 DSH 迁移时，先按[部署说明](docs/部署说明.md#升级-dsh-运行时)备份持久数据。
 
 如果原来分别装了 `@forst/dsh-server-metrics` 或 `@forst/dsh-session-billing`，先备份 profile 的 `package.json`、`pnpm-lock.yaml`、`cordis.yml`、`cordis.patch.yml`，移除旧插件后再安装统一包：
 

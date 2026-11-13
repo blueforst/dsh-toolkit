@@ -1,4 +1,4 @@
-// 隔离集成测试的本地替身：只生成固定模型响应和资源数据，不访问外部模型。
+// 隔离集成测试的本地替身：只生成固定模型响应、资源和额度数据。
 import http from 'node:http';
 const host = process.env.FIXTURE_HOST || '127.0.0.1';
 const port = Number(process.env.FIXTURE_PORT || 9199);
@@ -7,6 +7,10 @@ const server = http.createServer(async (req, res) => {
   if (req.url === '/metrics') {
     res.writeHead(200, { 'content-type': 'application/json' });
     return res.end(JSON.stringify({ scope: 'host', timestamp: Date.now(), cpu: { percent: 3.2, cores: 2 }, memory: { percent: 25, used: 2 ** 30, total: 4 * 2 ** 30 }, disk: { percent: 20, used: 10 * 2 ** 30, total: 50 * 2 ** 30 } }));
+  }
+  if (req.url === '/usage' && req.method === 'GET') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    return res.end(JSON.stringify({ usage: { monthly: { percent: 8, status: 'ok', resetsAt: '2026-12-01T00:00:00Z' } } }));
   }
   if (req.url === '/calls') { res.writeHead(200, { 'content-type': 'application/json' }); return res.end(JSON.stringify({ completions })); }
   if (req.url === '/v1/chat/completions' && req.method === 'POST') {

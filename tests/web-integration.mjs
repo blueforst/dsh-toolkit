@@ -1,4 +1,6 @@
 // 在具备 Chromium 与 playwright-core 的服务器环境运行；目标必须是隔离测试实例。
+// 启动 fixture-server.mjs，将 DSH_METRICS_URL 和 DSH_OPENCODE_GO_USAGE_URL 指向同一回环替身的 /metrics 和 /usage。
+// 将 DSH 默认模型指向替身的 /v1，并将 workspace-controller.config.documentsDirectory 设为可写的临时目录。
 import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { chromium } from 'playwright-core';
@@ -14,7 +16,6 @@ const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 const cost = page.locator('[data-dsh-session-cost]');
 try {
-  await page.route('**/opencode-go-quota', route => route.fulfill({ json: { scope: 'opencode-go-monthly', timestamp: Date.now(), monthly: { percent: 8, status: 'ok', resetsAt: '2026-12-01T00:00:00Z' } } }));
   const fresh = await browser.newContext();
   assert.equal((await fresh.request.get(base + '/server-metrics')).status(), 401);
   assert.equal((await fresh.request.get(base + '/opencode-go-quota')).status(), 401);
@@ -22,20 +23,28 @@ try {
   const response = await page.goto(bootstrap, { waitUntil: 'domcontentloaded' });
   assert.equal(response.status(), 200);
   const continueButton = page.getByRole('button', { name: '继续', exact: true });
-  await page.locator('[data-dsh-server-metrics][data-state="ready"]').waitFor({ timeout: 30000 });
-  assert.equal((await context.request.get(base + '/server-metrics', { headers: { Origin: 'https://untrusted.invalid' } })).status(), 403);
+  const metrics = page.locator('[data-dsh-server-metrics][data-state="ready"]');
+  const quota = page.locator('[data-dsh-opencode-go-quota] [role="progressbar"][aria-valuetext="8%"]');
+  await metrics.waitFor({ timeout: 30000 });
+  await quota.waitFor({ timeout: 30000 });
+  assert.deepEqual(await metrics.getByRole('progressbar').evaluateAll(bars => bars.map(bar => bar.getAttribute('aria-valuetext'))), ['3.2%', '25.0%', '20.0%']);
+  for (const route of ['/server-metrics', '/opencode-go-quota']) {
+    assert.equal((await context.request.head(base + route)).status(), 200);
+    assert.equal((await context.request.post(base + route)).status(), 405);
+    assert.equal((await context.request.get(base + route, { headers: { Origin: 'https://untrusted.invalid' } })).status(), 403);
+  }
   if (await continueButton.isVisible()) await continueButton.click();
   await page.getByRole('button', { name: '新建会话', exact: true }).first().click();
   await cost.waitFor({ state: 'hidden' });
   assert.equal(await page.locator('[role="progressbar"]').count(), 4);
-  assert.equal(await page.locator('[data-dsh-opencode-go-quota] [role="progressbar"]').getAttribute('aria-valuetext'), '8%');
   const editor = page.locator('[contenteditable="true"][role="textbox"]');
   await editor.click();
   await editor.press('ControlOrMeta+A');
   await editor.press('Backspace');
   await editor.pressSequentially('toolkit integration test');
   await page.getByRole('button', { name: '发送消息', exact: true }).click();
-  await page.locator('p:visible').filter({ hasText: /^工具包隔离验收通过。$/ }).last().waitFor({ timeout: 30000 });
+  const reply = page.locator('p:visible').filter({ hasText: /^工具包隔离验收通过。$/ }).last();
+  await reply.waitFor({ timeout: 30000 });
   await cost.waitFor({ timeout: 10000 });
   const usd = Number(await cost.getAttribute('data-usd'));
   assert(Math.abs(usd - .0003) < 1e-12, '真实会话投影未正确累计本地替身用量');
@@ -48,6 +57,9 @@ try {
   assert.deepEqual(await panel.locator('dt').allTextContents(), ['输入', '输出', '缓存读']);
   assert.equal(await panel.locator('[data-cost-bucket="cacheWriteUsd"]').count(), 0);
   await page.keyboard.press('Escape'); await panel.waitFor({ state: 'hidden' });
+  assert.equal(await trigger.evaluate(button => button === document.activeElement), true);
+  await trigger.click(); await panel.waitFor();
+  await reply.click(); await panel.waitFor({ state: 'hidden' });
   await page.reload({ waitUntil: 'domcontentloaded' });
   await cost.waitFor({ timeout: 30000 });
   assert.equal(Number(await cost.getAttribute('data-usd')), usd);
@@ -56,7 +68,7 @@ try {
   const bounds = await panel.boundingBox();
   assert(bounds.x >= 11 && bounds.x + bounds.width <= 419, '窄屏浮窗越界');
   assert.deepEqual(errors, []);
-  const result = { status: 'passed', package: '@forst/dsh-toolkit', version: '0.1.0', nativeInstall: true, authenticatedRoutes: true, sidebarBars: 4, quotaText: '8%', realSessionProjection: true, fixtureCostUsd: usd, costLabels: ['输入', '输出', '缓存读'], firstInStatsRow: true, reloadRestored: true, narrowViewport: true, externalModelRequests: 0, frontendErrors: [] };
+  const result = { status: 'passed', package: '@forst/dsh-toolkit', chromiumVersion: browser.version(), nativeInstall: true, authenticatedRoutes: true, sidebarBars: 4, quotaText: '8%', realSessionProjection: true, fixtureCostUsd: usd, costLabels: ['输入', '输出', '缓存读'], firstInStatsRow: true, escapeRestoredFocus: true, outsideClickCloses: true, reloadRestored: true, narrowViewport: true, externalModelRequests: 0, frontendErrors: [] };
   writeFileSync(output + '/web-integration.json', JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result));
 } catch (error) {

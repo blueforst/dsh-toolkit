@@ -1,12 +1,12 @@
 # 与现有 Camoufox Compose 合并，卷名与端口继承原服务。
 services:
   dsh:
-    image: local/dsh-toolkit-linux-desktop:0.1.2
+    image: local/dsh-toolkit-linux-desktop:0.2.2-rc.2
     mem_limit: '${DSH_DESKTOP_MEMORY_LIMIT:-6g}'
     memswap_limit: '${DSH_DESKTOP_MEMORY_SWAP_LIMIT:-7g}'
     build:
       context: ..
       dockerfile: linux-desktop/Dockerfile
       args:
-        DSH_CAMOUFOX_IMAGE: '${DSH_CAMOUFOX_IMAGE:-local/dsh-toolkit-camoufox:0.1.1}'
+        DSH_CAMOUFOX_IMAGE: '${DSH_CAMOUFOX_IMAGE:-local/dsh-toolkit-camoufox:0.2.2-rc.2}'
     command: [web, --patch, /opt/deepseek-harness/web.camoufox.patch.yml, --patch, /opt/deepseek-harness/web.linux-desktop.patch.yml, --no-open]
