@@ -1,5 +1,5 @@
 # 先构建 ../camoufox 配方，或显式传入已验证的 Camoufox 基础镜像。
-ARG DSH_CAMOUFOX_IMAGE=local/dsh-toolkit-camoufox:0.1.1
+ARG DSH_CAMOUFOX_IMAGE=local/dsh-toolkit-camoufox:0.2.2-rc.2
 FROM ${DSH_CAMOUFOX_IMAGE}
 USER root
 RUN apt-get update \

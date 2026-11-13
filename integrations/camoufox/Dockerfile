@@ -1,4 +1,4 @@
-FROM ghcr.io/runzhliu/deepseek-harness:0.2.2-alpha.2-r1@sha256:8cbd24d0cf0d26e5fdcd1b310e1a95e95bfc6c4d708784b08f142bd5740134bf
+FROM ghcr.io/runzhliu/deepseek-harness:0.2.2-rc.2-r1@sha256:01a218fd585f092b40bb097514d764825c7c5f1b2d39737de93c5616e4445f5b
 USER root
 ENV XDG_CACHE_HOME=/opt/dsh-camoufox/cache \
     DSH_DESKTOP_ENABLED=0 \

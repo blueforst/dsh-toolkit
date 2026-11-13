@@ -1,7 +1,7 @@
 name: dsh-toolkit-demo
 services:
   dsh:
-    image: local/dsh-toolkit-camoufox:0.1.1
+    image: local/dsh-toolkit-camoufox:0.2.2-rc.2
     build: .
     ports:
       - '127.0.0.1:${DSH_WEB_PORT:-3080}:3080'

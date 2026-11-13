@@ -6,7 +6,7 @@
 
 | 组件 | 版本 |
 | --- | --- |
-| DSH 镜像 | `0.2.2-alpha.2-r1`，Dockerfile 中固定 digest |
+| DSH 镜像 | `0.2.2-rc.2-r1`，Dockerfile 中固定镜像摘要 |
 | Camoufox 启动器 | `0.5.9-beta.6` |
 | 浏览器资源 | `158.0.1-beta.41`，大小和 SHA256 固定 |
 | Playwright | `1.62.0` |
@@ -36,7 +36,7 @@ cp integrations/camoufox/.env.example integrations/camoufox/.env
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml config
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml up -d --build
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml exec -T dsh \
-  dsh plugin --profile web add --ignore-scripts --save-exact /opt/dsh-toolkit-dist/forst-dsh-toolkit-0.1.1.tgz
+  dsh plugin --profile web add --ignore-scripts --save-exact /opt/dsh-toolkit-dist/forst-dsh-toolkit-0.2.2.tgz
 docker compose --env-file integrations/camoufox/.env -f integrations/camoufox/compose.yml restart dsh
 ```
 
@@ -70,4 +70,4 @@ DSH 认证与 TLS 证书按部署环境配置。本配方把 Web 和 noVNC 端�
 
 需要应用菜单、终端与文件管理器时，可叠加 [Linux 完整桌面配方](../linux-desktop/README.md)。它使用 DSH 官方 Cua Driver MCP provider 操作桌面应用，并默认关闭任意桌面输入自动唤醒浏览器；已有浏览器仍受桌面活动保护。普通 Camoufox 配方保留原唤醒行为。
 
-升级运行时需要重新构建并重建容器。只升级统一插件 `.tgz` 不会替换 Docker 内的浏览器接入脚本。升级前保留旧镜像和 Compose，回滚时恢复旧 image 并重建服务；无需删除持久数据。停机或闲置回收后，已打开的网页需要重新打开。
+升级运行时需要重新构建并重建容器。只升级统一插件 `.tgz` 不会替换 Docker 内的浏览器接入脚本。升级前停止服务，备份 `dsh-home` 卷并保留旧镜像、Compose 和 patch。降级时停止新版服务，恢复升级前的 `dsh-home` 快照与原配置，再用旧镜像重建容器。停机或闲置回收后，已打开的网页需要重新打开。

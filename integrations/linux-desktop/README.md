@@ -6,9 +6,9 @@
 
 调用链为 `DSH tools → 官方 computer-use provider → cua-driver MCP → X11 / AT-SPI → Xfce 应用`。这与仅能操作网页的 Playwright MCP 分开。现有 Browser Use、Camoufox 登录数据、设备预设和三十分钟闲置回收保留。
 
-DSH `0.2.2-alpha.2` 的 `dsh-cua-bundle` 原生对象接口仅支持 macOS，不能在 Linux 上启用这个开关就得到桌面控制。本配方使用同版本官方 `dsh-experimental-computer-use-cua-driver-mcp`，工具名称为 `mcp__cua-driver-mcp__<工具名>`，不宣称提供 macOS 的 `cua.getApp()` 接口。
+本配方使用 DSH `0.2.2-rc.2` 对应的官方 `dsh-experimental-computer-use-cua-driver-mcp` 控制 Linux 桌面，工具名称为 `mcp__cua-driver-mcp__<工具名>`。
 
-- 固定基础：已有 Camoufox 镜像、DSH `0.2.2-alpha.2`。
+- 固定基础：本仓库构建的 `local/dsh-toolkit-camoufox:0.2.2-rc.2` 镜像。
 - 固定驱动：Cua Driver `0.28.0`，Linux x86_64 发布归档，大小和 SHA256 见 [assets.json](assets.json)。目前只提供此架构的配方，其他架构会明确失败。
 - 官方 provider 从 npm 下载，验证 SHA512，复用基础镜像中的 Cordis 与 MCP 依赖，不安装第二份 DSH。
 - Xfce 和应用来自基础镜像的 Debian 软件源，软件包版本随构建时仓库变化；镜像构建结果需单独保留。
@@ -79,6 +79,6 @@ docker exec -i -e DSH_DESKTOP_ISOLATED_TEST=1 -e DSH_DESKTOP_VISION_TEST=1 TEST_
 
 编辑器验收会创建专用文件，通过 DSH 官方工具执行器完成输入、独立状态读回、保存与正常退出。首次运行需使用干净的测试会话，避免干扰其他程序。`ui-acceptance.mjs` 另验证按钮、弹窗和 noVNC；隔离实例的 bootstrap 地址需私下写入容器 `/tmp/dsh-desktop/test-bootstrap-url`。已有 HTTPS/Basic 入口可通过 `DSH_DESKTOP_TEST_AUTH_FILE` 指定容器内权限为 `0600` 的 JSON 文件，字段为 `url`、`username`、`password`；该模式只检查界面，不发送聊天或桌面键鼠输入，测试后删除凭据文件。不要把这些凭据加入仓库或输出日志。
 
-切换前备份 Compose、patch、旧镜像标识和 `.dsh` 卷。切换会重启 DSH，打开的网页和未保存窗口不会自动恢复。回滚时恢复原 Compose 和 patch，使用保留的旧镜像重建服务；不删除 `.dsh` 或工作目录。
+切换前停止服务，备份 Compose、patch、旧镜像标识和 `dsh-home` 卷。切换会重启 DSH，打开的网页和未保存窗口不会自动恢复。降级时停止新版服务，恢复升级前的 `dsh-home` 快照与原配置，再用旧镜像重建容器。
 
-上游说明：[DSH 官方 provider](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.2-alpha.2/packages/experimental/computer-use-cua-driver-mcp/README.zh.md)、[驱动发布](https://github.com/trycua/cua/releases/tag/cua-driver-rs-v0.28.0)。
+上游说明：[DSH 官方 provider](https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.2-rc.2/packages/experimental/computer-use-cua-driver-mcp/README.zh.md)、[驱动发布](https://github.com/trycua/cua/releases/tag/cua-driver-rs-v0.28.0)。
