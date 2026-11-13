@@ -1,7 +1,7 @@
 {
   "repository": "blueforst/dsh-toolkit-local",
-  "commit": "abee8771157880957999b1a4f6723a002b7edf51",
-  "version": "0.1.0",
+  "commit": "b463108e4864d0b4a9f122f5ea15425c2169fd6e",
+  "version": "0.1.1-server.1",
   "files": [
     {
       "path": "LICENSE",
@@ -13,7 +13,7 @@
     },
     {
       "path": "client.js",
-      "sha256": "e37a57c49ebeeb046d2589102baee9435b9b04c78ba376bf57a7d8df5c31ac7b"
+      "sha256": "333ecd6ee59da8c5b2b63ea7636b383b82eb0647e961ae12dac1d53762663591"
     },
     {
       "path": "cordis.patch.yml",
@@ -25,19 +25,19 @@
     },
     {
       "path": "package.json",
-      "sha256": "b01669e9704ed716bf148f30062336cb84ad5fc7b565200993eb83a004ad38d4"
+      "sha256": "dcf3043c64c69063548d48c7af0a7612563cc618121c095cc2ece2bf682c110b"
     },
     {
       "path": "plugins/opencode-go-quota/client.js",
-      "sha256": "365e26847cc06780461ac735b9272ff472baac96e7cde36796bf40421ab5cc82"
+      "sha256": "9de4e1b0b02c211125d8c570a74cdae25cb7c07b80315f75800c609e6ebb7e41"
     },
     {
       "path": "plugins/opencode-go-quota/index.js",
-      "sha256": "f8526ffc92754ecadf84a8fa37682cc7f974075a079b9d7cb62733f1aad96aba"
+      "sha256": "892520f6606d21d0a23a4ebfe6b884a3c2dbbe5baed6f446b51caea1801acfd7"
     },
     {
       "path": "plugins/opencode-go-quota/package.json",
-      "sha256": "1502ad5eb33e6b8884d548451887b03a641614c38e7f4732bf089d7ea9587946"
+      "sha256": "ccd34825de45a97b792105fff4ead458ed615591cc1f8e207b622d7bc920b75d"
     },
     {
       "path": "plugins/session-billing/client.js",

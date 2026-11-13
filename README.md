@@ -36,10 +36,10 @@ Linux 桌面新增配方及真实截图坐标验收见 [桌面说明](integratio
 
 ## 安装一个插件包
 
-0.2.0 的安装包由本仓库 [Actions](https://github.com/blueforst/dsh-toolkit/actions) 成功检查运行的 `dsh-toolkit-server-0.2.0` 构建产物提供。下载并解压后，在运行 DSH 的环境中执行：
+0.2.1 的安装包由本仓库 [Actions](https://github.com/blueforst/dsh-toolkit/actions) 成功检查运行的 `dsh-toolkit-server-0.2.1` 构建产物提供。下载并解压后，在运行 DSH 的环境中执行：
 
 ```bash
-dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.2.0.tgz"
+dsh plugin --profile web add --ignore-scripts --save-exact "$PWD/forst-dsh-toolkit-0.2.1.tgz"
 ```
 
 随后重启运行该 `web` profile 的 DSH 进程。保留下载包的位置，便于后续重新安装。本次代码拆分不会自动升级现有服务器；旧 Release 与部署镜像继续可用。集成目录中的原部署配方保持原版本基线，使用新版包时需明确替换安装命令中的包路径。
@@ -68,7 +68,9 @@ sudo python3 scripts/install-host-metrics.py --network YOUR_PROJECT_default
 
 ## 启用 OpenCode Go
 
-把自己的 `OPENCODE_GO_API_KEY` 加入 DSH 的进程环境，月额度即可读取。Compose 或 systemd 部署应修改相应服务环境并重启；只在另一个终端执行 `export` 不会改变已运行服务的环境。
+额度插件通过 DSH 凭据服务读取 `OPENCODE_GO_API_KEY`，可复用已保存的凭据或同名进程环境变量。修改 Compose 或 systemd 的服务环境后需重启。
+
+密钥只保存在宿主机时，可以部署仅在私有网桥或回环地址监听的只读额度代理，再给 DSH 进程设置 `DSH_OPENCODE_GO_USAGE_URL`，例如 `http://172.18.0.1:9192/usage`。代理返回 OpenCode Go 的 `usage.monthly` 对象，包含 `percent`、`status` 和 `resetsAt`。插件只接受数字形式的私有 IPv4 或回环地址，不向代理发送密钥，不跟随重定向。
 
 模型接入示例在 [examples/opencode-go.cordis.patch.yml](examples/opencode-go.cordis.patch.yml)，默认 `deepseek-v4.1-flash / Max`。这是配置示例，需合并进现有配置；不要覆盖原文件。凭据始终通过环境变量引用。
 

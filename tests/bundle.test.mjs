@@ -39,7 +39,8 @@ test('统一客户端只加载一个模块，注册两个侧栏区域和一个�
 test('服务器入口只额外挂资源监控，额度和费用由固定通用包提供', () => {
   const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
   assert.equal(manifest.name, '@forst/dsh-toolkit');
-  assert.equal(manifest.version, '0.2.0');
+  const source = JSON.parse(readFileSync(new URL('../vendor/dsh-toolkit-local.source.json', import.meta.url), 'utf8'));
+  assert.equal(manifest.sourceBaselines['dsh-toolkit-local'], source.version);
   assert(manifest.files.includes('vendor'), '发行包必须内含固定版本的通用模块');
   assert.equal(Object.keys(manifest.dependencies ?? {}).length, 0, '安装不需要临时抓取本机仓库最新分支');
   const server = readFileSync(new URL('../index.js', import.meta.url), 'utf8');
