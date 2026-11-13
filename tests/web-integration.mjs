@@ -43,7 +43,8 @@ try {
   await editor.press('Backspace');
   await editor.pressSequentially('toolkit integration test');
   await page.getByRole('button', { name: '发送消息', exact: true }).click();
-  await page.locator('p:visible').filter({ hasText: /^工具包隔离验收通过。$/ }).last().waitFor({ timeout: 30000 });
+  const reply = page.locator('p:visible').filter({ hasText: /^工具包隔离验收通过。$/ }).last();
+  await reply.waitFor({ timeout: 30000 });
   await cost.waitFor({ timeout: 10000 });
   const usd = Number(await cost.getAttribute('data-usd'));
   assert(Math.abs(usd - .0003) < 1e-12, '真实会话投影未正确累计本地替身用量');
@@ -58,7 +59,7 @@ try {
   await page.keyboard.press('Escape'); await panel.waitFor({ state: 'hidden' });
   assert.equal(await trigger.evaluate(button => button === document.activeElement), true);
   await trigger.click(); await panel.waitFor();
-  await editor.click(); await panel.waitFor({ state: 'hidden' });
+  await reply.click(); await panel.waitFor({ state: 'hidden' });
   await page.reload({ waitUntil: 'domcontentloaded' });
   await cost.waitFor({ timeout: 30000 });
   assert.equal(Number(await cost.getAttribute('data-usd')), usd);
